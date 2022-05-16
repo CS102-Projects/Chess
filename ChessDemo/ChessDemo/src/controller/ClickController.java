@@ -8,8 +8,11 @@ public class ClickController {
     private final Chessboard chessboard;
     private ChessComponent first;
 
+    private UndoManagerController undoManagerController;
+
     public ClickController(Chessboard chessboard) {
         this.chessboard = chessboard;
+        undoManagerController = UndoManagerController.getInstance();
     }
 
     public void onClick(ChessComponent chessComponent) {
@@ -27,9 +30,9 @@ public class ClickController {
                 recordFirst.repaint();
             } else if (handleSecond(chessComponent)) {
                 //repaint in swap chess method.
-                chessboard.swapChessComponents(first, chessComponent);
-                chessboard.swapColor();
-
+                undoManagerController.add(new MoveUndoController(first, chessComponent, chessboard));
+//                chessboard.swapChessComponents(first, chessComponent);
+//                chessboard.swapColor();
                 first.setSelected(false);
                 first = null;
             }

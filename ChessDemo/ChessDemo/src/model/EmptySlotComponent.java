@@ -16,6 +16,12 @@ public class EmptySlotComponent extends ChessComponent {
     }
 
     @Override
+    public ChessComponent clone()
+    {
+        return new EmptySlotComponent(getChessboardPoint(), getLocation(), clickController, getSize().width);
+    }
+
+    @Override
     public boolean canMoveTo(ChessComponent[][] chessboard, ChessboardPoint destination) {
         return false;
     }

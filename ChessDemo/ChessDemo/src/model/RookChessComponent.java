@@ -31,10 +31,10 @@ public class RookChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (ROOK_WHITE == null) {
-            ROOK_WHITE = ImageIO.read(new File("D:/images/rook-white.png"));
+            ROOK_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/rook-white.png"));
         }
         if (ROOK_BLACK == null) {
-            ROOK_BLACK = ImageIO.read(new File("D:/images/rook-black.png"));
+            ROOK_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/rook-black.png"));
         }
     }
 
@@ -60,6 +60,12 @@ public class RookChessComponent extends ChessComponent {
     public RookChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
         initiateRookImage(color);
+    }
+
+    @Override
+    public ChessComponent clone()
+    {
+        return new RookChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
     }
 
     /**

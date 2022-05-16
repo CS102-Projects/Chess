@@ -31,10 +31,10 @@ public class KingChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (KING_WHITE == null) {
-            KING_WHITE = ImageIO.read(new File("D:/images/king-white.png"));
+            KING_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/king-white.png"));
         }
         if (KING_BLACK == null) {
-            KING_BLACK = ImageIO.read(new File("D:/images/king-black.png"));
+            KING_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/king-black.png"));
         }
     }
 
@@ -60,6 +60,12 @@ public class KingChessComponent extends ChessComponent {
     public KingChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
         initiateKingImage(color);
+    }
+
+    @Override
+    public ChessComponent clone()
+    {
+        return new KingChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
     }
 
     /**

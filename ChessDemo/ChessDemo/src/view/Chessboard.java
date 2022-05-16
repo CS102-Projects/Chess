@@ -39,6 +39,11 @@ public class Chessboard extends JComponent {
         CHESS_SIZE = width / 8;
         System.out.printf("chessboard size = %d, chess size = %d\n", width, CHESS_SIZE);
 
+        reset();
+    }
+
+    public void reset()
+    {
         initiateEmptyChessboard();
 
         // FIXME: Initialize chessboard for testing only.
@@ -62,10 +67,23 @@ public class Chessboard extends JComponent {
             initPawnOnBoard(1,i, ChessColor.BLACK);
             initPawnOnBoard(CHESSBOARD_SIZE-2,i, ChessColor.WHITE);
         }
+
+        for (int i = 0; i < chessComponents.length; ++i) {
+            for (int j = 0; j < chessComponents[i].length; ++j) {
+                chessComponents[i][j].repaint();
+            }
+        }
     }
 
     public ChessComponent[][] getChessComponents() {
         return chessComponents;
+    }
+
+    public ChessComponent getChessComponent(int row, int col) {
+        if (row < 0 || row > 7 || col < 0 || col > 7) {
+            return null;
+        }
+        return chessComponents[row][col];
     }
 
     public ChessColor getCurrentColor() {
@@ -95,6 +113,28 @@ public class Chessboard extends JComponent {
 
         chess1.repaint();
         chess2.repaint();
+    }
+
+    public void undoChessComponents(ChessComponent chess1, ChessComponent chess2) {
+        int row1 = chess1.getChessboardPoint().getX(), col1 = chess1.getChessboardPoint().getY();
+        remove(chessComponents[row1][col1]);
+        add(chess1);
+        chessComponents[row1][col1] = chess1;
+        int row2 = chess2.getChessboardPoint().getX(), col2 = chess2.getChessboardPoint().getY();
+        remove(chessComponents[row2][col2]);
+        add(chess2);
+        chessComponents[row2][col2] = chess2;
+
+        chess1.repaint();
+        chess2.repaint();
+    }
+
+    public boolean checkChess(ChessComponent chess1) {
+        int row1 = chess1.getChessboardPoint().getX(), col1 = chess1.getChessboardPoint().getY();
+        if (chessComponents[row1][col1] != chess1) {
+            return false;
+        }
+        return true;
     }
 
     public void initiateEmptyChessboard() {

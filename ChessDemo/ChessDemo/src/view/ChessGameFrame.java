@@ -1,9 +1,11 @@
 package view;
 
 import controller.GameController;
+import controller.UndoManagerController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * 这个类表示游戏过程中的整个游戏界面，是一切的载体
@@ -31,6 +33,9 @@ public class ChessGameFrame extends JFrame {
         addHelloButton();
         addLoadButton();
         addResignationButton();
+        addResetButton();
+        addUndoButton();
+        addStoreButton();
     }
 
 
@@ -77,7 +82,7 @@ public class ChessGameFrame extends JFrame {
 
     private void addLoadButton() {
         JButton button = new JButton("Load");
-        button.setLocation(HEIGHT, HEIGHT / 10 + 240);
+        button.setLocation(HEIGHT, HEIGHT / 10 + 180);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
@@ -91,9 +96,55 @@ public class ChessGameFrame extends JFrame {
     private void addResignationButton() {
         JButton button = new JButton("Resignation");
         button.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Never give up!!!"));
-        button.setLocation(HEIGHT, HEIGHT / 10 + 360);
+        button.setLocation(HEIGHT, HEIGHT / 10 + 240);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(button);
     }
+
+    private void addResetButton() {
+        JButton button = new JButton("Reset");
+        button.setLocation(HEIGHT, HEIGHT / 10 + 300);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+
+        button.addActionListener(e -> {
+            System.out.println("Click reset");
+            gameController.reset();
+        });
+    }
+
+    private void addUndoButton() {
+        JButton button = new JButton("Undo");
+        button.setLocation(HEIGHT, HEIGHT / 10 + 420);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+
+        button.addActionListener(e -> {
+            if (gameController.undo()) {
+                System.out.println("Click Undo");
+            } else {
+                System.out.println("can't Undo");
+            }
+        });
+    }
+
+    private void addStoreButton() {
+        JButton button = new JButton("Store");
+        button.setLocation(HEIGHT, HEIGHT / 10 + 480);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+
+        button.addActionListener(e -> {
+            try {
+                gameController.store();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+    }
+
 }

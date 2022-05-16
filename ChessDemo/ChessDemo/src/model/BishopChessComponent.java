@@ -31,10 +31,10 @@ public class BishopChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (BISHOP_WHITE == null) {
-            BISHOP_WHITE = ImageIO.read(new File("D:/images/bishop-white.png"));
+            BISHOP_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/bishop-white.png"));
         }
         if (BISHOP_BLACK == null) {
-            BISHOP_BLACK = ImageIO.read(new File("D:/images/bishop-black.png"));
+            BISHOP_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/bishop-black.png"));
         }
     }
 
@@ -60,6 +60,12 @@ public class BishopChessComponent extends ChessComponent {
     public BishopChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
         initiateBishopImage(color);
+    }
+
+    @Override
+    public ChessComponent clone()
+    {
+        return new BishopChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
     }
 
     /**

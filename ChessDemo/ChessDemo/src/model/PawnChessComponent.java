@@ -20,7 +20,6 @@ public class PawnChessComponent extends ChessComponent {
     private static Image PAWN_WHITE;
     private static Image PAWN_BLACK;
 
-
     /**
      * 车棋子对象自身的图片，是上面两种中的一种
      */
@@ -32,10 +31,10 @@ public class PawnChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (PAWN_WHITE == null) {
-            PAWN_WHITE = ImageIO.read(new File("D:/images/pawn-white.png"));
+            PAWN_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/pawn-white.png"));
         }
         if (PAWN_BLACK == null) {
-            PAWN_BLACK = ImageIO.read(new File("D:/images/pawn-black.png"));
+            PAWN_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/pawn-black.png"));
         }
 
     }
@@ -65,6 +64,31 @@ public class PawnChessComponent extends ChessComponent {
         initiatePawnImage(color);
     }
 
+    @Override
+    public ChessComponent clone()
+    {
+        return new PawnChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
+    }
+
+    private boolean isFirstStep() {
+        if (getChessColor() == ChessColor.BLACK) {
+            return getChessboardPoint().getX() == 1;
+        } else {
+            return getChessboardPoint().getX() == 6;
+        }
+    }
+
+    public boolean hasBarrier(ChessComponent[][] chessComponents, int curX, int curY, int destX, int destY)
+    {
+        for (int col = Math.min(curX, destX) + 1; col < Math.max(curX, curX); col++) {
+            if (!(chessComponents[col][curY] instanceof EmptySlotComponent)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * 车棋子的移动规则
      *
@@ -76,25 +100,66 @@ public class PawnChessComponent extends ChessComponent {
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
         ChessboardPoint source = getChessboardPoint();
-        if (source.getX() == destination.getX()) {
-            int row = source.getX();
-            for (int col = Math.min(source.getY(), destination.getY()) + 1;
-                 col < Math.max(source.getY(), destination.getY()); col++) {
-                if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
+        int x1 = source.getX();
+        int y1 = source.getY();
+        int x2 = destination.getX();
+        int y2 = destination.getY();
+        if (y1 == y2) {
+            int inv = x2 - x1;
+            if (Math.abs(inv) > 2) {
+                return false;
+            }
+            if (Math.abs(inv) > 1) {
+                if (!isFirstStep()) {
                     return false;
                 }
             }
-        } else if (source.getY() == destination.getY()) {
-            int col = source.getY();
-            for (int row = Math.min(source.getX(), destination.getX()) + 1;
-                 row < Math.max(source.getX(), destination.getX()); row++) {
-                if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
+
+            if (getChessColor() == ChessColor.BLACK) {
+                if (x2 < x1) {
+                    return false;
+                }
+            } else {
+                if (x2 > x1) {
                     return false;
                 }
             }
-        } else { // Not on the same row or the same column.
-            return false;
+
+            if (hasBarrier(chessComponents, x1, y1, x2, y2)) {
+                return false;
+            }
+        } else {
+            int inv = x2 - x1;
+            if (Math.abs(inv) != 1) {
+                return false;
+            }
+            if (chessComponents[x2][y2].getChessColor() == getChessColor()) {
+                return false;
+            }
+
+            if (chessComponents[x2][y2].getChessColor() == ChessColor.NONE) {
+                int yy = 0;
+                if (getChessColor() == ChessColor.BLACK) {
+                    yy = y2 - 1;
+                } else {
+                    yy = y2 + 1;
+                }
+
+                if (yy < 0 || yy > 7) {
+                    return false;
+                }
+
+                ChessComponent chess = chessComponents[x2][yy];
+                if (chess.getChessColor() == getChessColor() ||
+                        !(chess instanceof PawnChessComponent) ||
+                        (chess.getCurStep() != chess.getStepCount() - 1)
+                ) {
+                    return false;
+                }
+            }
+
         }
+
         return true;
     }
 

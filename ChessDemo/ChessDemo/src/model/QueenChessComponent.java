@@ -30,10 +30,10 @@ public class QueenChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (QUEEN_WHITE == null) {
-            QUEEN_WHITE = ImageIO.read(new File("D:/images/queen-white.png"));
+            QUEEN_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/queen-white.png"));
         }
         if (QUEEN_BLACK == null) {
-            QUEEN_BLACK = ImageIO.read(new File("D:/images/queen-black.png"));
+            QUEEN_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/queen-black.png"));
         }
 
     }
@@ -55,6 +55,12 @@ public class QueenChessComponent extends ChessComponent {
     public QueenChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
         initiateQueenImage(color);
+    }
+
+    @Override
+    public ChessComponent clone()
+    {
+        return new QueenChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
     }
 
     /**
