@@ -1,7 +1,7 @@
 package model;
 
-import view.ChessboardPoint;
 import controller.ClickController;
+import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -20,7 +20,6 @@ public class PawnChessComponent extends ChessComponent {
     private static Image PAWN_WHITE;
     private static Image PAWN_BLACK;
 
-
     /**
      * 车棋子对象自身的图片，是上面两种中的一种
      */
@@ -32,10 +31,10 @@ public class PawnChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (PAWN_WHITE == null) {
-            PAWN_WHITE = ImageIO.read(new File("D:/images/pawn-white.png"));
+            PAWN_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/pawn-white.png"));
         }
         if (PAWN_BLACK == null) {
-            PAWN_BLACK = ImageIO.read(new File("D:/images/pawn-black.png"));
+            PAWN_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/pawn-black.png"));
         }
 
     }
@@ -65,6 +64,34 @@ public class PawnChessComponent extends ChessComponent {
         initiatePawnImage(color);
     }
 
+    @Override
+    public ChessComponent clone()
+    {
+        PawnChessComponent pawnChessComponent = new PawnChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
+        pawnChessComponent.curStep = this.curStep;
+        pawnChessComponent.stepCount = this.stepCount;
+        return pawnChessComponent;
+    }
+
+    private boolean isFirstStep() {
+        if (getChessColor() == ChessColor.BLACK) {
+            return getChessboardPoint().getX() == 1;
+        } else {
+            return getChessboardPoint().getX() == 6;
+        }
+    }
+
+    public boolean hasBarrier(ChessComponent[][] chessComponents, int curX, int curY, int destX, int destY)
+    {
+        for (int col = Math.min(curX, destX) + 1; col < Math.max(curX, destX); col++) {
+            if (!(chessComponents[col][curY] instanceof EmptySlotComponent)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * 车棋子的移动规则
      *
@@ -76,25 +103,85 @@ public class PawnChessComponent extends ChessComponent {
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
         ChessboardPoint source = getChessboardPoint();
-        if (source.getX() == destination.getX()) {
-            int row = source.getX();
-            for (int col = Math.min(source.getY(), destination.getY()) + 1;
-                 col < Math.max(source.getY(), destination.getY()); col++) {
-                if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
-                    return false;
-                }
-            }
-        } else if (source.getY() == destination.getY()) {
-            int col = source.getY();
-            for (int row = Math.min(source.getX(), destination.getX()) + 1;
-                 row < Math.max(source.getX(), destination.getX()); row++) {
-                if (!(chessComponents[row][col] instanceof EmptySlotComponent)) {
-                    return false;
-                }
-            }
-        } else { // Not on the same row or the same column.
+        int x1 = source.getX();
+        int y1 = source.getY();
+        int x2 = destination.getX();
+        int y2 = destination.getY();
+
+        if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) {
             return false;
         }
+
+        if (y1 == y2) { // 说明是在前进
+            int inv = x2 - x1;
+            if (Math.abs(inv) > 2) {
+                return false;
+            }
+            if (Math.abs(inv) > 1) {
+                if (!isFirstStep()) {
+                    return false;
+                }
+            }
+
+            if (getChessColor() == ChessColor.BLACK) {
+                if (x2 < x1) {
+                    return false;
+                }
+            } else {
+                if (x2 > x1) {
+                    return false;
+                }
+            }
+
+            // 前方是否有其它棋子
+            int frontX = getChessColor() == ChessColor.BLACK ? 1 : -1;
+            return !hasBarrier(chessComponents, x1, y1, x2 + frontX, y2);
+        } else {
+            int invX = x2 - x1;
+            int invY = y2 - y1;
+            // 斜着只能前进一步
+            if (Math.abs(invX) != 1 || Math.abs(invY) != 1) {
+                return false;
+            }
+            // 不能吃自己方的棋子
+            if (chessComponents[x2][y2].getChessColor() == getChessColor()) {
+                return false;
+            }
+            // 不能后退
+            if (getChessColor() == ChessColor.BLACK && invX < 0) {
+                return false;
+            }
+            // 不能后退
+            if (getChessColor() == ChessColor.WHITE && invX > 0) {
+                return false;
+            }
+
+            // 如果落子点是空，进行吃过路兵判断
+            if (chessComponents[x2][y2].getChessColor() == ChessColor.NONE) {
+
+                // 找到过路兵的x坐标
+                int xx = 0;
+                if (getChessColor() == ChessColor.BLACK) {
+                    xx = x2 - 1;
+                } else {
+                    xx = x2 + 1;
+                }
+
+                if (xx < 0 || xx > 7) {
+                    return false;
+                }
+
+                // 判断是否有过路兵
+                ChessComponent chess = chessComponents[xx][y2];
+                // 判断该棋子是否只走过一步
+                return chess.getChessColor() != getChessColor() &&
+                        chess instanceof PawnChessComponent &&
+                        chess.isNewestStep() &&   // 判断上一步走的是不是该棋子
+                        (1 == chess.getStepCount());
+            }
+
+        }
+
         return true;
     }
 

@@ -1,7 +1,8 @@
 package model;
 
-import view.ChessboardPoint;
+import controller.ChessEnablePathController;
 import controller.ClickController;
+import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -31,10 +32,10 @@ public class KingChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (KING_WHITE == null) {
-            KING_WHITE = ImageIO.read(new File("D:/images/king-white.png"));
+            KING_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/king-white.png"));
         }
         if (KING_BLACK == null) {
-            KING_BLACK = ImageIO.read(new File("D:/images/king-black.png"));
+            KING_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/king-black.png"));
         }
     }
 
@@ -62,6 +63,15 @@ public class KingChessComponent extends ChessComponent {
         initiateKingImage(color);
     }
 
+    @Override
+    public ChessComponent clone()
+    {
+        KingChessComponent kingChessComponent = new KingChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
+        kingChessComponent.curStep = this.curStep;
+        kingChessComponent.stepCount = this.stepCount;
+        return kingChessComponent;
+    }
+
     /**
      * 车棋子的移动规则
      *
@@ -72,7 +82,17 @@ public class KingChessComponent extends ChessComponent {
 
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
+        int x2 = destination.getX();
+        int y2 = destination.getY();
+
+        if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) {
+            return false;
+        }
+
         ChessboardPoint source = getChessboardPoint();
+        if (getStepCount() == 0) {
+            return ChessEnablePathController.canMoveTo(this, destination);
+        }
         return Math.abs(destination.getX() - source.getX()) <= 1 && Math.abs(destination.getY() - source.getY()) <= 1;
     }
 

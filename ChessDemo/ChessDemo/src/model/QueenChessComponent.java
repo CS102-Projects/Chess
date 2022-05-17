@@ -1,7 +1,7 @@
 package model;
 
-import view.ChessboardPoint;
 import controller.ClickController;
+import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -30,10 +30,10 @@ public class QueenChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (QUEEN_WHITE == null) {
-            QUEEN_WHITE = ImageIO.read(new File("D:/images/queen-white.png"));
+            QUEEN_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/queen-white.png"));
         }
         if (QUEEN_BLACK == null) {
-            QUEEN_BLACK = ImageIO.read(new File("D:/images/queen-black.png"));
+            QUEEN_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/queen-black.png"));
         }
 
     }
@@ -57,6 +57,15 @@ public class QueenChessComponent extends ChessComponent {
         initiateQueenImage(color);
     }
 
+    @Override
+    public ChessComponent clone()
+    {
+        QueenChessComponent queenChessComponent = new QueenChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
+        queenChessComponent.curStep = this.curStep;
+        queenChessComponent.stepCount = this.stepCount;
+        return queenChessComponent;
+    }
+
     /**
      * 车棋子的移动规则
      *
@@ -67,6 +76,13 @@ public class QueenChessComponent extends ChessComponent {
 
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
+        int x2 = destination.getX();
+        int y2 = destination.getY();
+
+        if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) {
+            return false;
+        }
+
         ChessboardPoint source = getChessboardPoint();
         if (source.getX()-destination.getX()==source.getY()-destination.getY()){
             int row = Math.min(source.getX(),destination.getX());int col =  Math.min(source.getY(),destination.getY());

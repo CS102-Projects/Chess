@@ -1,28 +1,50 @@
 package controller;
 
+import view.ChessGameFrame;
 import view.Chessboard;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 public class GameController {
     private Chessboard chessboard;
+    private StoreController storeController;
+
 
     public GameController(Chessboard chessboard) {
         this.chessboard = chessboard;
+        storeController = new StoreController();
     }
 
-    public List<String> loadGameFromFile(String path) {
+    public void loadGameFromFile(String path) {
         try {
-            List<String> chessData = Files.readAllLines(Path.of(path));
-            chessboard.loadGame(chessData);
-            return chessData;
+            reset();
+            storeController.load(path, chessboard);
+            chessboard.clearStatu();
+            chessboard.clearPath();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
+    public void reset() {
+        chessboard.reset();
+        UndoManagerController.getInstance().clear();
+    }
+
+    public boolean canUndo() {
+        return UndoManagerController.getInstance().canUndo();
+    }
+
+    public Boolean undo()
+    {
+        chessboard.swapColor();
+        ChessGameFrame.currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
+        chessboard.clearPath();
+        chessboard.clearStatu();
+        return UndoManagerController.getInstance().undo();
+    }
+
+    public void store(String path) throws IOException {
+        storeController.store(path);
+    }
 }

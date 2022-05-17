@@ -1,7 +1,7 @@
 package model;
 
-import view.ChessboardPoint;
 import controller.ClickController;
+import view.ChessboardPoint;
 
 import java.awt.*;
 import java.io.IOException;
@@ -13,6 +13,12 @@ public class EmptySlotComponent extends ChessComponent {
 
     public EmptySlotComponent(ChessboardPoint chessboardPoint, Point location, ClickController listener, int size) {
         super(chessboardPoint, location, ChessColor.NONE, listener, size);
+    }
+
+    @Override
+    public ChessComponent clone()
+    {
+        return new EmptySlotComponent(getChessboardPoint(), getLocation(), clickController, getSize().width);
     }
 
     @Override

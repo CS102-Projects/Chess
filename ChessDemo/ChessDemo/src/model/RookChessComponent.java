@@ -1,7 +1,7 @@
 package model;
 
-import view.ChessboardPoint;
 import controller.ClickController;
+import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -31,10 +31,10 @@ public class RookChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (ROOK_WHITE == null) {
-            ROOK_WHITE = ImageIO.read(new File("D:/images/rook-white.png"));
+            ROOK_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/rook-white.png"));
         }
         if (ROOK_BLACK == null) {
-            ROOK_BLACK = ImageIO.read(new File("D:/images/rook-black.png"));
+            ROOK_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/rook-black.png"));
         }
     }
 
@@ -62,6 +62,15 @@ public class RookChessComponent extends ChessComponent {
         initiateRookImage(color);
     }
 
+    @Override
+    public ChessComponent clone()
+    {
+        RookChessComponent rookChessComponent = new RookChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
+        rookChessComponent.curStep = this.curStep;
+        rookChessComponent.stepCount = this.stepCount;
+        return rookChessComponent;
+    }
+
     /**
      * 车棋子的移动规则
      *
@@ -72,6 +81,13 @@ public class RookChessComponent extends ChessComponent {
 
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
+        int x2 = destination.getX();
+        int y2 = destination.getY();
+
+        if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) {
+            return false;
+        }
+
         ChessboardPoint source = getChessboardPoint();
         if (source.getX() == destination.getX()) {
             int row = source.getX();

@@ -1,7 +1,7 @@
 package model;
 
-import view.ChessboardPoint;
 import controller.ClickController;
+import view.ChessboardPoint;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +26,11 @@ public abstract class ChessComponent extends JComponent {
     /**
      * handle click event
      */
-    private ClickController clickController;
+    protected ClickController clickController;
+
+    private static int totalStepCount = 0;
+    protected int stepCount;
+    protected int curStep;
 
     /**
      * chessboardPoint: 表示8*8棋盘中，当前棋子在棋格对应的位置，如(0, 0), (1, 0), (0, 7),(7, 7)等等
@@ -39,6 +43,8 @@ public abstract class ChessComponent extends JComponent {
     protected final ChessColor chessColor;
     private boolean selected;
 
+    private int showType;
+
     protected ChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         setLocation(location);
@@ -47,6 +53,12 @@ public abstract class ChessComponent extends JComponent {
         this.chessColor = chessColor;
         this.selected = false;
         this.clickController = clickController;
+        this.curStep = 0;
+        this.stepCount = 0;
+    }
+
+    public ClickController getClickController() {
+        return clickController;
     }
 
     public ChessboardPoint getChessboardPoint() {
@@ -67,6 +79,39 @@ public abstract class ChessComponent extends JComponent {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public void setShowType(int type) {
+        showType = type;
+    }
+
+    public void incrementStep() {
+        curStep = ++totalStepCount;
+        ++stepCount;
+    }
+
+    public static void decrementTotalCount() {
+        --totalStepCount;
+    }
+
+    public void setCurStep(int step) {
+        curStep = step;
+    }
+
+    public int getCurStep() {
+        return curStep;
+    }
+
+    public int getStepCount() {
+        return stepCount;
+    }
+
+    public int getTotalStepCount() {
+        return totalStepCount;
+    }
+
+    public boolean isNewestStep() {
+        return curStep == totalStepCount;
     }
 
     /**
@@ -98,6 +143,7 @@ public abstract class ChessComponent extends JComponent {
         }
     }
 
+    public abstract ChessComponent clone();
     /**
      * @param chessboard  棋盘
      * @param destination 目标位置，如(0, 0), (0, 7)等等
@@ -117,9 +163,41 @@ public abstract class ChessComponent extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponents(g);
-        System.out.printf("repaint chess [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
+        //System.out.printf("repaint chess [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
         Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
         g.setColor(squareColor);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+        Font f = new Font("Comic Sans MS", Font.BOLD, 13);
+        g.setFont(f);
+        g.setColor(Color.green);
+//        String ss = "("+getChessboardPoint().getX() + ","+getChessboardPoint().getY()+") ";
+//        g.drawString(ss, 20, 20);
+
+        if (showType == 1) {
+            g.setColor(Color.green);
+            drawPathType(g);
+        } else if (showType == 2) {
+            g.setColor(Color.gray);
+            drawPathType(g);
+        } else if (showType == 3) {
+            g.setColor(Color.red);
+            drawPathType(g);
+        }
     }
+
+    private void drawPathType(Graphics g) {
+        g.fillRect(8, 8, 20, 5);
+        g.fillRect(8, 8, 5, 20);
+
+        g.fillRect(getWidth() - 8 - 20, 8, 20, 5);
+        g.fillRect(getWidth() - 8 - 5, 8, 5, 20);
+
+        g.fillRect(8, getHeight() - 8 - 5, 20, 5);
+        g.fillRect(8, getHeight() - 8 - 20, 5, 20);
+
+        g.fillRect(getWidth() - 8 - 20, getHeight() - 8 - 5, 20, 5);
+        g.fillRect(getWidth() - 8 - 5, getHeight() - 8 - 20, 5, 20);
+    }
+
 }
