@@ -59,7 +59,7 @@ public class ChessGameFrame extends JFrame {
         add(statusLabel);
     }
     private void addCurrentPlayer() {
-        JLabel currentPlayerLabel = new JLabel();
+
         currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
         currentPlayerLabel.setLocation(HEIGHT, HEIGHT / 10);
         currentPlayerLabel.setSize(200, 60);

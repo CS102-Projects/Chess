@@ -35,13 +35,13 @@ public class UndoManagerController {
     }
 
     public String toString() {
-        String result = new String();
+        StringBuilder result = new StringBuilder();
         for (UndoController controller: undostack) {
             if (!controller.toString().isEmpty()) {
-                result = result + "\n" + controller.toString();
+                result.append("\n").append(controller);
             }
         }
-        return result;
+        return result.toString();
     }
 
     public void clear() {
