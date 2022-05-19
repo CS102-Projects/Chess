@@ -16,6 +16,7 @@ public class ChessGameFrame extends JFrame {
     public final int CHESSBOARD_SIZE;
     private GameController gameController;
     public static JLabel currentPlayerLabel = new JLabel();
+    public static JTextArea record = new JTextArea("MoveRecord");
 
     public ChessGameFrame(int width, int height) {
 
@@ -34,7 +35,8 @@ public class ChessGameFrame extends JFrame {
         addResetButton();
         addUndoButton();
         addStoreButton();
-        addCurrentPlayer();
+        addCurrentPlayerLabel();
+        addMoveRecordPanel();
     }
 
 
@@ -58,7 +60,28 @@ public class ChessGameFrame extends JFrame {
         statusLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
         add(statusLabel);
     }
-    private void addCurrentPlayer() {
+
+    private void addMoveRecordPanel() {
+        JPanel moveRecord = new JPanel();
+        moveRecord.setLocation(HEIGHT + 300, HEIGHT / 10);
+        moveRecord.setSize(500, 1500);
+        moveRecord.setFont(new Font("Rockwell", Font.BOLD, 20));
+        record.setEditable(false);
+        record.setLineWrap(true);    //设置文本域中的文本为自动换行
+        record.setForeground(Color.BLACK);    //设置组件的背景色
+        record.setFont(new Font("楷体", Font.BOLD, 16));    //修改字体样式
+        record.setBackground(Color.WHITE);//设置按钮背景色
+//        record.setLocation(HEIGHT+600,HEIGHT/10);
+        record.setSize(200, 600);
+//        JScrollPane jsp=new JScrollPane(record);    //将文本域放入滚动窗口
+//        Dimension size=record.getPreferredSize();    //获得文本域的首选大小
+//        jsp.setBounds(110,110,size.width,size.height);
+        moveRecord.add(record);//将JScrollPane添加到JPanel容器中
+        add(moveRecord);
+        System.out.println("awe");
+    }
+
+    private void addCurrentPlayerLabel() {
 
         currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
         currentPlayerLabel.setLocation(HEIGHT, HEIGHT / 10);

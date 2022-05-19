@@ -171,6 +171,7 @@ public class ClickController {
             groupUndoController.addUndoController(switchUndoController);
             groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
+//            ChessGameFrame.record.append("\n"+ groupUndoController);
         } else if (actionType == ActionType.UPGRADE_PAWN) {
             if (switchType == 0) {
                 switchChessDlg.setVisible(true);
@@ -187,6 +188,7 @@ public class ClickController {
             SwitchUndoController switchUndoController = new SwitchUndoController(newFirst, switchType, chessboard);
             groupUndoController.addUndoController(switchUndoController);
             undoManagerController.add(groupUndoController);
+            ChessGameFrame.record.append("\n" + groupUndoController);
         } else if (actionType == ActionType.EXCHANGE_KING_AND_ROOK) {
             GroupUndoController groupUndoController = new GroupUndoController();
             int secondY = chessComponent.getChessboardPoint().getY();
@@ -208,9 +210,12 @@ public class ClickController {
             }
             groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
+            ChessGameFrame.record.append("\n" + groupUndoController);
 
         } else {
-            undoManagerController.add(new MoveUndoController(firstChess, chessComponent, chessboard));
+            MoveUndoController move = new MoveUndoController(firstChess, chessComponent, chessboard);
+            undoManagerController.add(move);
+            ChessGameFrame.record.append("\n" + move);
         }
     }
 }

@@ -29,18 +29,19 @@ public class GameController {
     public void reset() {
         chessboard.reset();
         UndoManagerController.getInstance().clear();
+        ChessGameFrame.record.setText("MoveRecord");
     }
 
     public boolean canUndo() {
         return UndoManagerController.getInstance().canUndo();
     }
 
-    public Boolean undo()
-    {
+    public boolean undo() {
         chessboard.swapColor();
         ChessGameFrame.currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
         chessboard.clearPath();
         chessboard.clearStatu();
+
         return UndoManagerController.getInstance().undo();
     }
 

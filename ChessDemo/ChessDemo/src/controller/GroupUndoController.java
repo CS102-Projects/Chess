@@ -16,7 +16,7 @@ public class GroupUndoController extends UndoController {
 
     @Override
     public void undo() {
-        for (int i = undoList.size() - 1; i >= 0; --i) {
+        for (int i = undoList.size() - 1; i >= 0; i--) {
             undoList.get(i).undo();
         }
 //        for (UndoController controller: undoList) {

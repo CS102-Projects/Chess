@@ -18,34 +18,26 @@ public class SwitchUndoController extends UndoController {
         switchType = _switchType;
 
         switch (switchType) {
-            case 1:
-                newChess = new RookChessComponent(chess.getChessboardPoint(),
-                        chess.getLocation(),
-                        chess.getChessColor(),
-                        chess.getClickController(),
-                        chess.getSize().width);
-                break;
-            case 2:
-                newChess = new KnightChessComponent(chess.getChessboardPoint(),
-                        chess.getLocation(),
-                        chess.getChessColor(),
-                        chess.getClickController(),
-                        chess.getSize().width);
-                break;
-            case 3:
-                newChess = new BishopChessComponent(chess.getChessboardPoint(),
-                        chess.getLocation(),
-                        chess.getChessColor(),
-                        chess.getClickController(),
-                        chess.getSize().width);
-                break;
-            case 4:
-                newChess = new QueenChessComponent(chess.getChessboardPoint(),
-                        chess.getLocation(),
-                        chess.getChessColor(),
-                        chess.getClickController(),
-                        chess.getSize().width);
-                break;
+            case 1 -> newChess = new RookChessComponent(chess.getChessboardPoint(),
+                    chess.getLocation(),
+                    chess.getChessColor(),
+                    chess.getClickController(),
+                    chess.getSize().width);
+            case 2 -> newChess = new KnightChessComponent(chess.getChessboardPoint(),
+                    chess.getLocation(),
+                    chess.getChessColor(),
+                    chess.getClickController(),
+                    chess.getSize().width);
+            case 3 -> newChess = new BishopChessComponent(chess.getChessboardPoint(),
+                    chess.getLocation(),
+                    chess.getChessColor(),
+                    chess.getClickController(),
+                    chess.getSize().width);
+            case 4 -> newChess = new QueenChessComponent(chess.getChessboardPoint(),
+                    chess.getLocation(),
+                    chess.getChessColor(),
+                    chess.getClickController(),
+                    chess.getSize().width);
         }
 
         chessboard.putChessOnBoard(newChess);
