@@ -27,7 +27,6 @@ public abstract class ChessComponent extends JComponent {
      * handle click event
      */
     protected ClickController clickController;
-
     private static int totalStepCount = 0;
     protected int stepCount;
     protected int curStep;
@@ -42,6 +41,11 @@ public abstract class ChessComponent extends JComponent {
     private ChessboardPoint chessboardPoint;
     protected final ChessColor chessColor;
     private boolean selected;
+    protected char name;
+
+    public char getname() {
+        return name;
+    }
 
     private int showType;
 

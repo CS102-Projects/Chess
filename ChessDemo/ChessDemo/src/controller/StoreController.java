@@ -1,37 +1,87 @@
 package controller;
 
+import model.ChessComponent;
 import view.Chessboard;
 import view.ChessboardPoint;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
+import java.util.Objects;
 
 public class StoreController {
+    public StoreController(Chessboard chessboard) {
+        this.chessboard = chessboard;
+    }
 
-    private Chessboard chessboard;
-
-    public boolean load(String filepath, Chessboard _chessboard) throws IOException {
+    public boolean load(File file, Chessboard _chessboard) throws IOException {
         chessboard = _chessboard;
-        BufferedReader in=new BufferedReader(new FileReader(filepath));
+        String fileName = file.getName();
+        if (!fileName.matches(".*(txt).*")) {
+            Frame loadWrongFrame = new LoadWrong(104);
+            loadWrongFrame.setVisible(true);
+            return false;
+        }
+        BufferedReader in = new BufferedReader(new FileReader(file));
         String line = in.readLine();
-        if (!line.trim().equals("--chessdemo--")) {
-            System.out.println("not chessdemo data format");
+        line = in.readLine();
+        if (!(Objects.equals(line, "WHITE") || Objects.equals(line, "BLACK"))) {
+            Frame loadWrongFrame = new LoadWrong(103);
+            loadWrongFrame.setVisible(true);
+            return false;
+        }
+        String[] CHESSBOARD = new String[8];
+        for (int i = 0; i < 8; i++) {
+            CHESSBOARD[i] = in.readLine();
+            if (CHESSBOARD[i].length() != 8) {
+                Frame loadWrongFrame = new LoadWrong(101);
+                loadWrongFrame.setVisible(true);
+                return false;
+            }
+        }
+        String reg = ".*[^KQRBNP_kqrbnp].*";
+        for (String s : CHESSBOARD) {
+            for (int i = 0; i < 8; i++) {
+                if (s.matches(reg)) {
+                    Frame loadWrongFrame = new LoadWrong(102);
+                    loadWrongFrame.setVisible(true);
+                    return false;
+                }
+            }
+        }
+        line = in.readLine();
+        if (!line.trim().equals("--chessmove--")) {
+            System.out.println("not chessmove data format");
             return false;
         }
 
         line = in.readLine();
-        while (line!=null)
-        {
+        while (line != null) {
             if (!parseLine(line.trim())) {
                 return false;
             }
-            line=in.readLine();
+            line = in.readLine();
         }
 
         in.close();
         return true;
+    }
+
+    private Chessboard chessboard;
+
+    public void store(String path) throws IOException {
+//        Date date = new Date();//获取当前的日期
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");//设置日期格式
+//        String str = df.format(date);//获取String类型的时间
+//
+//        FileWriter writer = new FileWriter("./archive_" + str);
+        FileWriter writer = new FileWriter(path + ".txt");
+        writer.write("--chessboard--");
+        writer.write("\n" + Chessboard.currentColor);
+        writer.write("\n" + getChessboardGraph());
+        writer.write("--chessmove--");
+        writer.write(UndoManagerController.getInstance().toString());
+        writer.close();
     }
 
     public boolean parseLine(String line) {
@@ -107,15 +157,36 @@ public class StoreController {
         return true;
     }
 
-    public void store(String path) throws IOException {
-//        Date date = new Date();//获取当前的日期
-//        SimpleDateFormat df = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");//设置日期格式
-//        String str = df.format(date);//获取String类型的时间
-//
-//        FileWriter writer = new FileWriter("./archive_" + str);
-        FileWriter writer = new FileWriter(path);
-        writer.write("--chessdemo--");
-        writer.write(UndoManagerController.getInstance().toString());
-        writer.close();
+    public String getChessboardGraph() {
+        StringBuilder graph = new StringBuilder();
+        for (ChessComponent[] chessComponent : chessboard.getChessComponents()) {
+            for (ChessComponent component : chessComponent) {
+                graph.append(component.getname());
+            }
+            graph.append("\n");
+        }
+        return String.valueOf(graph);
+    }
+
+    static class LoadWrong extends JFrame {
+        public LoadWrong(int wrongType) {
+            setTitle("LoadWrong");
+            setSize(500, 300);
+            // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setLocationRelativeTo(null);
+            JLabel jLabel = new JLabel();
+            if (wrongType == 101)
+                jLabel.setText("   WRONG" + wrongType + ":Size of Chessboard Wrong");
+            if (wrongType == 102)
+                jLabel.setText("   WRONG" + wrongType + ":Chesscomponent Wrong");
+            if (wrongType == 103)
+                jLabel.setText("   WRONG" + wrongType + ":CurrentPlayer Wrong");
+            if (wrongType == 104)
+                jLabel.setText("   WRONG" + wrongType + ":FileType Wrong");
+            jLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
+            Container container = getContentPane();
+            container.add(jLabel);
+//            setVisible(true);
+        }
     }
 }

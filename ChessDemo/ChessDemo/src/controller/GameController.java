@@ -1,24 +1,25 @@
 package controller;
 
+import model.ChessColor;
 import view.ChessGameFrame;
 import view.Chessboard;
 
+import java.io.File;
 import java.io.IOException;
 
 public class GameController {
     private Chessboard chessboard;
     private StoreController storeController;
 
-
     public GameController(Chessboard chessboard) {
         this.chessboard = chessboard;
-        storeController = new StoreController();
+        storeController = new StoreController(chessboard);
     }
 
-    public void loadGameFromFile(String path) {
+    public void loadGameFromFile(File file) {
         try {
             reset();
-            storeController.load(path, chessboard);
+            storeController.load(file, chessboard);
             chessboard.clearStatu();
             chessboard.clearPath();
         } catch (IOException e) {
@@ -38,6 +39,10 @@ public class GameController {
 
     public boolean undo() {
         chessboard.swapColor();
+        if (chessboard.getCurrentColor() == ChessColor.BLACK) {
+            ChessGameFrame.record.append("\nBLACK Undo");
+        } else
+            ChessGameFrame.record.append("\nWHITE Undo");
         ChessGameFrame.currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
         chessboard.clearPath();
         chessboard.clearStatu();

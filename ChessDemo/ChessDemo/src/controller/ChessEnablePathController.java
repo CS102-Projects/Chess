@@ -38,7 +38,7 @@ public class ChessEnablePathController {
         int cnt = 0;
         for (ChessboardPoint point : protectPath) {
             if (!(chessboard.getChessComponent(point) instanceof EmptySlotComponent)) {
-                ++cnt;
+                cnt++;
             }
         }
         if (cnt > 1) { // cnt数量包含了 king ，所以最少为 1
@@ -225,9 +225,8 @@ public class ChessEnablePathController {
         ArrayList<ChessComponent> arrayList = new ArrayList<>();
 
         ChessComponent[][] chessComponents = chessboard.getChessComponents();
-        for (int i = 0; i < chessComponents.length; ++i) {
-            for (int j = 0; j < chessComponents[i].length; ++j) {
-                ChessComponent component = chessComponents[i][j];
+        for (ChessComponent[] chessComponent : chessComponents) {
+            for (ChessComponent component : chessComponent) {
                 if (component instanceof EmptySlotComponent || component.getChessColor() == victim.getChessColor()) {
                     continue;
                 }

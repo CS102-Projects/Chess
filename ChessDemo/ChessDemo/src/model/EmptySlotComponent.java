@@ -13,6 +13,7 @@ public class EmptySlotComponent extends ChessComponent {
 
     public EmptySlotComponent(ChessboardPoint chessboardPoint, Point location, ClickController listener, int size) {
         super(chessboardPoint, location, ChessColor.NONE, listener, size);
+        this.name = '_';
     }
 
     @Override

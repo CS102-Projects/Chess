@@ -54,6 +54,11 @@ public class QueenChessComponent extends ChessComponent {
 
     public QueenChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
+        if (color == ChessColor.BLACK) {
+            this.name = 'Q';
+        } else if (color == ChessColor.WHITE) {
+            this.name = 'q';
+        }
         initiateQueenImage(color);
     }
 

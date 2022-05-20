@@ -52,7 +52,6 @@ public class Chessboard extends JComponent {
     public void reset()
     {
         initiateEmptyChessboard();
-
         // FIXME: Initialize chessboard for testing only.
         initRookOnBoard(0, 0, ChessColor.BLACK);
         initRookOnBoard(CHESSBOARD_SIZE - 1, 0, ChessColor.WHITE);

@@ -3,7 +3,9 @@ package view;
 import controller.GameController;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -16,7 +18,7 @@ public class ChessGameFrame extends JFrame {
     public final int CHESSBOARD_SIZE;
     private GameController gameController;
     public static JLabel currentPlayerLabel = new JLabel();
-    public static JTextArea record = new JTextArea("MoveRecord");
+    public static JTextArea record = new JTextArea("MoveRecord", 20, 20);
 
     public ChessGameFrame(int width, int height) {
 
@@ -63,8 +65,8 @@ public class ChessGameFrame extends JFrame {
 
     private void addMoveRecordPanel() {
         JPanel moveRecord = new JPanel();
-        moveRecord.setLocation(HEIGHT + 300, HEIGHT / 10);
-        moveRecord.setSize(500, 1500);
+        moveRecord.setLocation(HEIGHT + 100, HEIGHT / 10);
+        moveRecord.setSize(500, 600);
         moveRecord.setFont(new Font("Rockwell", Font.BOLD, 20));
         record.setEditable(false);
         record.setLineWrap(true);    //设置文本域中的文本为自动换行
@@ -72,13 +74,15 @@ public class ChessGameFrame extends JFrame {
         record.setFont(new Font("楷体", Font.BOLD, 16));    //修改字体样式
         record.setBackground(Color.WHITE);//设置按钮背景色
 //        record.setLocation(HEIGHT+600,HEIGHT/10);
-        record.setSize(200, 600);
-//        JScrollPane jsp=new JScrollPane(record);    //将文本域放入滚动窗口
-//        Dimension size=record.getPreferredSize();    //获得文本域的首选大小
-//        jsp.setBounds(110,110,size.width,size.height);
-        moveRecord.add(record);//将JScrollPane添加到JPanel容器中
+        record.setSize(300, 300);
+        JScrollPane jsp = new JScrollPane(record);    //将文本域放入滚动窗口
+        Dimension size = record.getPreferredSize();    //获得文本域的首选大小
+        jsp.setBounds(HEIGHT + 300, HEIGHT / 10, size.width, size.height);
+        jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        DefaultCaret caret = (DefaultCaret) record.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        moveRecord.add(jsp);//将JScrollPane添加到JPanel容器中
         add(moveRecord);
-        System.out.println("awe");
     }
 
     private void addCurrentPlayerLabel() {
@@ -113,13 +117,11 @@ public class ChessGameFrame extends JFrame {
         button.addActionListener(e -> {
             System.out.println("Click load");
             JFileChooser fileChooser = new JFileChooser();
-
             int flag = fileChooser.showOpenDialog(this);
             if (flag == JFileChooser.APPROVE_OPTION) {
-                String path = fileChooser.getSelectedFile().getAbsolutePath();
-                gameController.loadGameFromFile(path);
+                File file = fileChooser.getSelectedFile();
+                gameController.loadGameFromFile(file);
             }
-
 //            String path = JOptionPane.showInputDialog(this,"Input Path here");
 //            gameController.loadGameFromFile(path);
         });
@@ -176,18 +178,14 @@ public class ChessGameFrame extends JFrame {
         button.addActionListener(e -> {
             try {
                 JFileChooser fileChooser = new JFileChooser();
-
                 int flag = fileChooser.showSaveDialog(this);
                 if (flag == JFileChooser.APPROVE_OPTION) {
                     String path = fileChooser.getSelectedFile().getAbsolutePath();
                     gameController.store(path);
                 }
-
-
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
     }
-
 }
