@@ -2,6 +2,7 @@ package view;
 
 import controller.GameController;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
@@ -19,6 +20,7 @@ public class ChessGameFrame extends JFrame {
     private GameController gameController;
     public static JLabel currentPlayerLabel = new JLabel();
     public static JTextArea record = new JTextArea("MoveRecord", 20, 20);
+    private static JLabel background;
 
     public ChessGameFrame(int width, int height) {
 
@@ -27,43 +29,57 @@ public class ChessGameFrame extends JFrame {
         this.HEIGHT = height;
         this.CHESSBOARD_SIZE = HEIGHT * 4 / 5;
         setSize(WIDTH, HEIGHT);
+
+        background = new JLabel();
+        background.setBounds(0, 0, this.getWidth(), this.getHeight());
+        ImageIcon imageIcon = new ImageIcon("C:\\Users\\zhang\\Desktop\\cutecute\\flower.jpg");
+        Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
+        imageIcon.setImage(scaledImage);
+        background.setIcon(imageIcon);
+        background.setVisible(true);
+        background.setLayout(null);
+        this.add(background);
+
         setLocationRelativeTo(null); // Center the window.
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //设置程序关闭按键，如果点击右上方的叉就游戏全部关闭了
         setLayout(null);
-        addChessboard();
+        addChessboard(background);
 //        addHelloButton();
-        addLoadButton();
-        addResignationButton();
-        addResetButton();
-        addUndoButton();
-        addStoreButton();
-        addCurrentPlayerLabel();
-        addMoveRecordPanel();
+        addLoadButton(background);
+        addResignationButton(background);
+        addResetButton(background);
+        addUndoButton(background);
+        addStoreButton(background);
+        addCurrentPlayerLabel(background);
+        addMoveRecordPanel(background);
+        addTheme1button(background);
+        addTheme2button(background);
+        addTheme3button(background);
     }
 
 
     /**
      * 在游戏面板中添加棋盘
      */
-    private void addChessboard() {
+    private void addChessboard(JLabel j) {
         Chessboard chessboard = new Chessboard(CHESSBOARD_SIZE, CHESSBOARD_SIZE);
         gameController = new GameController(chessboard);
         chessboard.setLocation(HEIGHT / 10, HEIGHT / 10);
-        add(chessboard);
+        j.add(chessboard);
     }
 
     /**
      * 在游戏面板中添加标签
      */
-    private void addLabel() {
+    private void addLabel(JLabel j) {
         JLabel statusLabel = new JLabel("(՞•Ꙫ•՞)ﾉ");
         statusLabel.setLocation(HEIGHT, HEIGHT / 10);
         statusLabel.setSize(200, 60);
         statusLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(statusLabel);
+        j.add(statusLabel);
     }
 
-    private void addMoveRecordPanel() {
+    private void addMoveRecordPanel(JLabel j) {
         JPanel moveRecord = new JPanel();
         moveRecord.setLocation(HEIGHT + 100, HEIGHT / 10);
         moveRecord.setSize(500, 600);
@@ -82,37 +98,37 @@ public class ChessGameFrame extends JFrame {
         DefaultCaret caret = (DefaultCaret) record.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         moveRecord.add(jsp);//将JScrollPane添加到JPanel容器中
-        add(moveRecord);
+        j.add(moveRecord);
     }
 
-    private void addCurrentPlayerLabel() {
+    private void addCurrentPlayerLabel(JLabel j) {
 
         currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
         currentPlayerLabel.setLocation(HEIGHT, HEIGHT / 10);
         currentPlayerLabel.setSize(200, 60);
         currentPlayerLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(currentPlayerLabel);
+        j.add(currentPlayerLabel);
     }
 
     /**
      * 在游戏面板中增加一个按钮，如果按下的话就会显示Hello, world!
      */
 
-    private void addHelloButton() {
+    private void addHelloButton(JLabel j) {
         JButton button = new JButton("Show Hello Here");
         button.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Hello, world!"));
         button.setLocation(HEIGHT, HEIGHT / 10 + 120);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(button);
+        j.add(button);
     }
 
-    private void addLoadButton() {
+    private void addLoadButton(JLabel j) {
         JButton button = new JButton("Load");
         button.setLocation(HEIGHT, HEIGHT / 10 + 180);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(button);
+        j.add(button);
 
         button.addActionListener(e -> {
             System.out.println("Click load");
@@ -127,21 +143,21 @@ public class ChessGameFrame extends JFrame {
         });
     }
 
-    private void addResignationButton() {
+    private void addResignationButton(JLabel j) {
         JButton button = new JButton("Resignation");
         button.addActionListener((e) -> JOptionPane.showMessageDialog(this, "Never give up!!!"));
         button.setLocation(HEIGHT, HEIGHT / 10 + 240);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(button);
+        j.add(button);
     }
 
-    private void addResetButton() {
+    private void addResetButton(JLabel j) {
         JButton button = new JButton("Reset");
         button.setLocation(HEIGHT, HEIGHT / 10 + 300);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(button);
+        j.add(button);
 
         button.addActionListener(e -> {
             System.out.println("Click reset");
@@ -149,12 +165,12 @@ public class ChessGameFrame extends JFrame {
         });
     }
 
-    private void addUndoButton() {
+    private void addUndoButton(JLabel j) {
         JButton button = new JButton("Undo");
         button.setLocation(HEIGHT, HEIGHT / 10 + 420);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(button);
+        j.add(button);
 
         button.addActionListener(e -> {
             if (!gameController.canUndo()) {
@@ -169,12 +185,12 @@ public class ChessGameFrame extends JFrame {
         });
     }
 
-    private void addStoreButton() {
+    private void addStoreButton(JLabel j) {
         JButton button = new JButton("Store");
         button.setLocation(HEIGHT, HEIGHT / 10 + 480);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
-        add(button);
+        j.add(button);
 
         button.addActionListener(e -> {
             try {
@@ -188,5 +204,86 @@ public class ChessGameFrame extends JFrame {
                 throw new RuntimeException(ex);
             }
         });
+    }
+    public void addTheme1button(JLabel j) {
+        JButton button = new JButton("S1");
+        button.setLocation(HEIGHT, HEIGHT / 10 + 60);
+        button.setSize(60, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        j.add(button);
+
+        button.addActionListener(e -> {
+            ImageIcon imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/flower.jpg");
+            Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
+            imageIcon.setImage(scaledImage);
+            j.setIcon(imageIcon);
+            j.setVisible(true);
+            //j.setLayout(null);
+        });
+    }
+
+    public void addTheme2button(JLabel j) {
+        JButton button = new JButton("S2");
+        button.setLocation(HEIGHT + 60, HEIGHT / 10 + 60);
+        button.setSize(60, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        j.add(button);
+
+        button.addActionListener(e -> {
+            ImageIcon imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/cover.jpg");
+            Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
+            imageIcon.setImage(scaledImage);
+            j.setIcon(imageIcon);
+            j.setVisible(true);
+            //j.setLayout(null);
+        });
+    }
+
+    public void addTheme3button(JLabel j) {
+        JButton button = new JButton("S3");
+        button.setLocation(HEIGHT + 120, HEIGHT / 10 + 60);
+        //button.setLocation(this.WIDTH-HEIGHT-228, HEIGHT / 10 + 60);
+        button.setSize(60, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        j.add(button);
+
+        button.addActionListener(e -> {
+            ImageIcon imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/purple.png");
+            Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
+            imageIcon.setImage(scaledImage);
+            j.setIcon(imageIcon);
+            j.setVisible(true);
+            //j.setLayout(null);
+        });
+
+
+    }
+
+    public static void playMusic() {// 背景音乐播放
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(new File("./ChessDemo/ChessDemo/music/Summer.wav"));    //绝对路径
+            AudioFormat aif = ais.getFormat();
+            final SourceDataLine sdl;
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class, aif);
+            sdl = (SourceDataLine) AudioSystem.getLine(info);
+            sdl.open(aif);
+            sdl.start();
+            FloatControl fc = (FloatControl) sdl.getControl(FloatControl.Type.MASTER_GAIN);
+            // value可以用来设置音量，从0-2.0
+            double value = 2;
+            float dB = (float) (Math.log(value == 0.0 ? 0.0001 : value) / Math.log(10.0) * 20.0);
+            fc.setValue(dB);
+            int nByte = 0;
+            final int SIZE = 1024 * 64;
+            byte[] buffer = new byte[SIZE];
+            while (nByte != -1) {
+                nByte = ais.read(buffer, 0, SIZE);
+//                sdl.write(buffer, 0, nByte);
+            }
+            sdl.stop();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -22,7 +22,9 @@ public abstract class ChessComponent extends JComponent {
      */
 
 //    private static final Dimension CHESSGRID_SIZE = new Dimension(1080 / 4 * 3 / 8, 1080 / 4 * 3 / 8);
-    private static final Color[] BACKGROUND_COLORS = {Color.WHITE, Color.BLACK};
+    private static Color[] BACKGROUND_COLORS = {new Color(244, 242, 213), new Color(111, 155, 90)};
+    private static Color[] ENTER_COLORS = {new Color(245, 236, 138), new Color(245, 236, 138)};
+    private static Color[] SELECT_COLORS = {new Color(197, 191, 116), new Color(197, 191, 116)};
     /**
      * handle click event
      */
@@ -44,6 +46,11 @@ public abstract class ChessComponent extends JComponent {
     protected char name;
     private int showType;
 
+
+    private boolean isEnablePath;
+    private boolean isMouseEnter;
+
+
     protected ChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         setLocation(location);
@@ -54,6 +61,7 @@ public abstract class ChessComponent extends JComponent {
         this.clickController = clickController;
         this.curStep = 0;
         this.stepCount = 0;
+        this.repaint();
     }
 
     public char getname() {
@@ -86,6 +94,10 @@ public abstract class ChessComponent extends JComponent {
 
     public void setShowType(int type) {
         showType = type;
+    }
+
+    public void setEnablePath(boolean enablePath) {
+        isEnablePath = enablePath;
     }
 
     public void incrementStep() {
@@ -139,14 +151,25 @@ public abstract class ChessComponent extends JComponent {
     @Override
     protected void processMouseEvent(MouseEvent e) {
         super.processMouseEvent(e);
+        //mouse event 对象被鼠标点击之后会调用这个方法
 
         if (e.getID() == MouseEvent.MOUSE_PRESSED) {
             System.out.printf("Click [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
             clickController.onClick(this);
         }
+        //输出一个坐标
+        if (e.getID() == MouseEvent.MOUSE_ENTERED) {
+            isMouseEnter = true;
+            repaint();
+        }
+        if (e.getID() == MouseEvent.MOUSE_EXITED) {
+            isMouseEnter = false;
+            repaint();
+        }
     }
 
     public abstract ChessComponent clone();
+
     /**
      * @param chessboard  棋盘
      * @param destination 目标位置，如(0, 0), (0, 7)等等
@@ -167,40 +190,44 @@ public abstract class ChessComponent extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponents(g);
         //System.out.printf("repaint chess [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
-        Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
-        g.setColor(squareColor);
+
+        if (isMouseEnter) {
+            Color squareColor = ENTER_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
+            g.setColor(squareColor);
+        } else {
+            Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
+            g.setColor(squareColor);
+        }
+
+
+        if (isSelected()) {
+            Color squareColor = SELECT_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
+            g.setColor(squareColor);
+        }
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
         Font f = new Font("Comic Sans MS", Font.BOLD, 13);
         g.setFont(f);
         g.setColor(Color.green);
+
 //        String ss = "("+getChessboardPoint().getX() + ","+getChessboardPoint().getY()+") ";
 //        g.drawString(ss, 20, 20);
+        //显示坐标
 
-        if (showType == 1) {
-            g.setColor(Color.green);
-            drawPathType(g);
-        } else if (showType == 2) {
-            g.setColor(Color.gray);
-            drawPathType(g);
-        } else if (showType == 3) {
-            g.setColor(Color.red);
-            drawPathType(g);
+
+        if (isEnablePath) {
+            g.fillRect(8, 8, 20, 5);
+            g.fillRect(8, 8, 5, 20);
+
+            g.fillRect(getWidth() - 8 - 20, 8, 20, 5);
+            g.fillRect(getWidth() - 8 - 5, 8, 5, 20);
+
+            g.fillRect(8, getHeight() - 8 - 5, 20, 5);
+            g.fillRect(8, getHeight() - 8 - 20, 5, 20);
+
+            g.fillRect(getWidth() - 8 - 20, getHeight() - 8 - 5, 20, 5);
+            g.fillRect(getWidth() - 8 - 5, getHeight() - 8 - 20, 5, 20);
         }
-    }
-
-    private void drawPathType(Graphics g) {
-        g.fillRect(8, 8, 20, 5);
-        g.fillRect(8, 8, 5, 20);
-
-        g.fillRect(getWidth() - 8 - 20, 8, 20, 5);
-        g.fillRect(getWidth() - 8 - 5, 8, 5, 20);
-
-        g.fillRect(8, getHeight() - 8 - 5, 20, 5);
-        g.fillRect(8, getHeight() - 8 - 20, 5, 20);
-
-        g.fillRect(getWidth() - 8 - 20, getHeight() - 8 - 5, 20, 5);
-        g.fillRect(getWidth() - 8 - 5, getHeight() - 8 - 20, 5, 20);
     }
 
 }

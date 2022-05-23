@@ -54,10 +54,10 @@ public class QueenChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (QUEEN_WHITE == null) {
-            QUEEN_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/queen-white.png"));
+            QUEEN_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/5.png"));
         }
         if (QUEEN_BLACK == null) {
-            QUEEN_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/queen-black.png"));
+            QUEEN_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/11.png"));
         }
 
     }
@@ -134,11 +134,8 @@ public class QueenChessComponent extends ChessComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
-        g.drawImage(queenImage, 1, 1, getWidth(), getHeight(), this);
+        g.drawImage(queenImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
-            g.setColor(Color.RED);
-            g.drawOval(1, 1, getWidth(), getHeight());
-        }
+
     }
 }

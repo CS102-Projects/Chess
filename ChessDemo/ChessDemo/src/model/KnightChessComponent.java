@@ -59,10 +59,10 @@ public class KnightChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (KNIGHT_WHITE == null) {
-            KNIGHT_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/knight-white.png"));
+            KNIGHT_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/2.png"));
         }
         if (KNIGHT_BLACK == null) {
-            KNIGHT_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/knight-black.png"));
+            KNIGHT_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/9.png"));
         }
     }
 
@@ -107,11 +107,8 @@ public class KnightChessComponent extends ChessComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
-        g.drawImage(knightImage, 0, 0, getWidth(), getHeight(), this);
+        g.drawImage(knightImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
-            g.setColor(Color.RED);
-            g.drawOval(0, 0, getWidth(), getHeight());
-        }
+
     }
 }

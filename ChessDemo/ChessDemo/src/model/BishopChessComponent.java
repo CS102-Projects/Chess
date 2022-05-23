@@ -59,10 +59,10 @@ public class BishopChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (BISHOP_WHITE == null) {
-            BISHOP_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/bishop-white.png"));
+            BISHOP_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/3.png"));
         }
         if (BISHOP_BLACK == null) {
-            BISHOP_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/bishop-black.png"));
+            BISHOP_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/8.png"));
         }
     }
 
@@ -123,11 +123,8 @@ public class BishopChessComponent extends ChessComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
-        g.drawImage(bishopImage, 0, 0, getWidth(), getHeight(), this);
+        g.drawImage(bishopImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
-            g.setColor(Color.RED);
-            g.drawOval(0, 0, getWidth(), getHeight());
-        }
+
     }
 }
