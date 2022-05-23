@@ -3,9 +3,6 @@ package controller;
 import model.ChessComponent;
 import view.Chessboard;
 
-
-import java.awt.*;
-
 public class MoveUndoController extends UndoController {
     private ChessComponent firstChess;
     private ChessComponent secondChess;
@@ -21,7 +18,7 @@ public class MoveUndoController extends UndoController {
         _firstChess.incrementStep();
 
         System.out.println("cur step: " + _firstChess.getCurStep() + " count: " + _firstChess.getStepCount() + " total: " + _firstChess.getTotalStepCount());
-        System.out.println(toString());
+        System.out.println(this);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package model;
 
-import view.ChessboardPoint;
 import controller.ClickController;
+import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,17 +25,14 @@ public class RookChessComponent extends ChessComponent {
      */
     private Image rookImage;
 
-    /**
-     * 读取加载车棋子的图片
-     *
-     */
-    public void loadResource() throws IOException {
-        if (ROOK_WHITE == null) {
-            ROOK_WHITE = ImageIO.read(new File("D:/image_new/1.png"));
+    public RookChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
+        super(chessboardPoint, location, color, listener, size);
+        if (color == ChessColor.BLACK) {
+            this.name = 'R';
+        } else if (color == ChessColor.WHITE) {
+            this.name = 'r';
         }
-        if (ROOK_BLACK == null) {
-            ROOK_BLACK = ImageIO.read(new File("D:/image_new/10.png"));
-        }
+        initiateRookImage(color);
     }
 
     /**
@@ -57,14 +54,20 @@ public class RookChessComponent extends ChessComponent {
         }
     }
 
-    public RookChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
-        super(chessboardPoint, location, color, listener, size);
-        initiateRookImage(color);
+    /**
+     * 读取加载车棋子的图片
+     */
+    public void loadResource() throws IOException {
+        if (ROOK_WHITE == null) {
+            ROOK_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/rook-white.png"));
+        }
+        if (ROOK_BLACK == null) {
+            ROOK_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/rook-black.png"));
+        }
     }
 
     @Override
-    public ChessComponent clone()
-    {
+    public ChessComponent clone() {
         RookChessComponent rookChessComponent = new RookChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
         rookChessComponent.curStep = this.curStep;
         rookChessComponent.stepCount = this.stepCount;
@@ -120,7 +123,11 @@ public class RookChessComponent extends ChessComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
-        g.drawImage(rookImage, 0, 0, getWidth() , getHeight(), this);
+        g.drawImage(rookImage, 0, 0, getWidth(), getHeight(), this);
         g.setColor(Color.BLACK);
+        if (isSelected()) { // Highlights the model if selected.
+            g.setColor(Color.RED);
+            g.drawOval(0, 0, getWidth(), getHeight());
+        }
     }
 }

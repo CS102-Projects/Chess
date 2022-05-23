@@ -1,7 +1,7 @@
 package model;
 
-import view.ChessboardPoint;
 import controller.ClickController;
+import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,17 +25,14 @@ public class BishopChessComponent extends ChessComponent {
      */
     private Image bishopImage;
 
-    /**
-     * 读取加载车棋子的图片
-     *
-     */
-    public void loadResource() throws IOException {
-        if (BISHOP_WHITE == null) {
-            BISHOP_WHITE = ImageIO.read(new File("D:/image_new/3.png"));
+    public BishopChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
+        super(chessboardPoint, location, color, listener, size);
+        if (color == ChessColor.BLACK) {
+            this.name = 'B';
+        } else if (color == ChessColor.WHITE) {
+            this.name = 'b';
         }
-        if (BISHOP_BLACK == null) {
-            BISHOP_BLACK = ImageIO.read(new File("D:/image_new/8.png"));
-        }
+        initiateBishopImage(color);
     }
 
     /**
@@ -57,14 +54,20 @@ public class BishopChessComponent extends ChessComponent {
         }
     }
 
-    public BishopChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
-        super(chessboardPoint, location, color, listener, size);
-        initiateBishopImage(color);
+    /**
+     * 读取加载车棋子的图片
+     */
+    public void loadResource() throws IOException {
+        if (BISHOP_WHITE == null) {
+            BISHOP_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/bishop-white.png"));
+        }
+        if (BISHOP_BLACK == null) {
+            BISHOP_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/bishop-black.png"));
+        }
     }
 
     @Override
-    public ChessComponent clone()
-    {
+    public ChessComponent clone() {
         BishopChessComponent bishopChessComponent = new BishopChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
         bishopChessComponent.curStep = this.curStep;
         bishopChessComponent.stepCount = this.stepCount;
@@ -120,8 +123,11 @@ public class BishopChessComponent extends ChessComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
-        g.drawImage(bishopImage, 0, 0, getWidth() , getHeight(), this);
+        g.drawImage(bishopImage, 0, 0, getWidth(), getHeight(), this);
         g.setColor(Color.BLACK);
-
+        if (isSelected()) { // Highlights the model if selected.
+            g.setColor(Color.RED);
+            g.drawOval(0, 0, getWidth(), getHeight());
+        }
     }
 }

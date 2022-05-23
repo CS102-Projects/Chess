@@ -1,7 +1,7 @@
 package model;
 
-import view.ChessboardPoint;
 import controller.ClickController;
+import view.ChessboardPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,19 +23,14 @@ public class QueenChessComponent extends ChessComponent {
 
     private Image queenImage;
 
-    /**
-     * 读取加载王后棋子的图片
-     *
-     * @throws IOException
-     */
-    public void loadResource() throws IOException {
-        if (QUEEN_WHITE == null) {
-            QUEEN_WHITE = ImageIO.read(new File("D:/image_new/5.png"));
+    public QueenChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
+        super(chessboardPoint, location, color, listener, size);
+        if (color == ChessColor.BLACK) {
+            this.name = 'Q';
+        } else if (color == ChessColor.WHITE) {
+            this.name = 'q';
         }
-        if (QUEEN_BLACK == null) {
-            QUEEN_BLACK = ImageIO.read(new File("D:/image_new/11.png"));
-        }
-
+        initiateQueenImage(color);
     }
 
 
@@ -52,14 +47,23 @@ public class QueenChessComponent extends ChessComponent {
         }
     }
 
-    public QueenChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
-        super(chessboardPoint, location, color, listener, size);
-        initiateQueenImage(color);
+    /**
+     * 读取加载王后棋子的图片
+     *
+     * @throws IOException
+     */
+    public void loadResource() throws IOException {
+        if (QUEEN_WHITE == null) {
+            QUEEN_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/queen-white.png"));
+        }
+        if (QUEEN_BLACK == null) {
+            QUEEN_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/queen-black.png"));
+        }
+
     }
 
     @Override
-    public ChessComponent clone()
-    {
+    public ChessComponent clone() {
         QueenChessComponent queenChessComponent = new QueenChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
         queenChessComponent.curStep = this.curStep;
         queenChessComponent.stepCount = this.stepCount;
@@ -130,8 +134,11 @@ public class QueenChessComponent extends ChessComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
-        g.drawImage(queenImage, 1, 1, getWidth() , getHeight(), this);
+        g.drawImage(queenImage, 1, 1, getWidth(), getHeight(), this);
         g.setColor(Color.BLACK);
-
+        if (isSelected()) { // Highlights the model if selected.
+            g.setColor(Color.RED);
+            g.drawOval(1, 1, getWidth(), getHeight());
+        }
     }
 }

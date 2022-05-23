@@ -1,10 +1,14 @@
 package controller;
 
+
 import model.*;
+import view.ChessGameFrame;
 import view.Chessboard;
 import view.ChessboardPoint;
 import view.SwitchChessDialog;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class ClickController {
@@ -14,12 +18,18 @@ public class ClickController {
     private UndoManagerController undoManagerController;
     private SwitchChessDialog switchChessDlg;
 
+
     public ClickController(Chessboard chessboard) {
         this.chessboard = chessboard;
         undoManagerController = UndoManagerController.getInstance();
+
         switchChessDlg = new SwitchChessDialog();
         switchChessDlg.setModal(true);
         switchChessDlg.setVisible(false);
+    }
+
+    public void clear() {
+        first = null;
     }
 
     public void onClick(ChessComponent chessComponent) {
@@ -45,20 +55,59 @@ public class ClickController {
                 chessboard.showEnablePath(chessComponent);
             } else if (handleSecond(chessComponent)) {
                 chessboard.clearPath();
-                ChessboardPoint movePoint = new ChessboardPoint(chessComponent.getChessboardPoint().getX(), chessComponent.getChessboardPoint().getY());
-                ActionType actionType = calcActionType(first, chessComponent);
-                handleAction(chessComponent, actionType);
-
-                ChessComponent curChess = chessboard.getChessComponent(movePoint);
-                if (chessboard.getStatusController().isHitKing(curChess)) {
-                    System.out.println("--attack king--");
-                }
-
-                chessboard.swapColor();
+                moveChess(first.getChessboardPoint(), chessComponent.getChessboardPoint());
                 first.setSelected(false);
                 first = null;
             }
         }
+    }
+
+    public void moveChess(ChessboardPoint from, ChessboardPoint to) {
+        ChessComponent chess1 = chessboard.getChessComponent(from);
+        ChessComponent chess2 = chessboard.getChessComponent(to);
+
+        ActionType actionType = calcActionType(chess1, chess2);
+        handleAction(chess1, chess2, actionType);
+
+        move(chess1);
+    }
+
+    private void move(ChessComponent chess1) {
+        ChessColor enemyColor = chess1.getChessColor().getColor() == Color.BLACK ? ChessColor.WHITE : ChessColor.BLACK;
+        if (chessboard.getStatusController().isHitKing(chess1.getChessColor(), chessboard)) {
+            ChessComponent enemyKing = chessboard.getKing(enemyColor);
+            enemyKing.setShowType(3); // 被攻击
+            System.out.println("--attack king--");
+
+            if (chessboard.getStatusController().isDead(enemyColor, chessboard)) {
+                System.out.println(chess1.getChessColor().toString() + " is win");
+                int res = JOptionPane.showConfirmDialog(null, chess1.getChessColor().toString() + " is win \n 是否重新开始", "WIN", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    chessboard.reset();
+                    UndoManagerController.getInstance().clear();
+                }
+            }
+        }
+        if (chessboard.getStatusController().isCanNotMoveDraw(enemyColor, chessboard)) {
+            System.out.println("Draw");
+            int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
+            if (res == JOptionPane.YES_OPTION) {
+                chessboard.reset();
+                UndoManagerController.getInstance().clear();
+            }
+        }
+        chessboard.swapColor();
+        ChessGameFrame.currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
+    }
+
+    public void moveChessByFile(ChessboardPoint from, ChessboardPoint to, int switchType) {
+        ChessComponent chess1 = chessboard.getChessComponent(from);
+        ChessComponent chess2 = chessboard.getChessComponent(to);
+
+        ActionType actionType = calcActionType(chess1, chess2);
+        handleActionByFile(chess1, chess2, actionType, switchType);
+
+        move(chess1);
     }
 
     /**
@@ -76,8 +125,18 @@ public class ClickController {
      */
 
     private boolean handleSecond(ChessComponent chessComponent) {
-        return chessComponent.getChessColor() != chessboard.getCurrentColor() &&
-                first.canMoveTo(chessboard.getChessComponents(), chessComponent.getChessboardPoint());
+        if (chessComponent.getChessColor() == chessboard.getCurrentColor() ||
+                !first.canMoveTo(chessboard.getChessComponents(), chessComponent.getChessboardPoint())) {
+            return false;
+        }
+        // 如果这步走出去后 king 被将军，则不允许走这步
+        ArrayList<ChessboardPoint> safePath = ChessEnablePathController.getSafePath(first);
+        for (ChessboardPoint point : safePath) {
+            if (chessComponent.getChessboardPoint().equal(point)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private ActionType calcActionType(ChessComponent first, ChessComponent second)
@@ -97,89 +156,67 @@ public class ClickController {
         return ActionType.NONE;
     }
 
-    private void handleAction(ChessComponent chessComponent, ActionType actionType) {
+    private void handleAction(ChessComponent firstChess, ChessComponent chessComponent, ActionType actionType) {
+        handleActionByFile(firstChess, chessComponent, actionType, 0);
+    }
+
+    private void handleActionByFile(ChessComponent firstChess, ChessComponent chessComponent, ActionType actionType, int switchType) {
         if (actionType == ActionType.EAT_PASS_PAWN) {
-            int inv = first.getChessColor() == ChessColor.BLACK ? -1 : 1;
+            int inv = firstChess.getChessColor() == ChessColor.BLACK ? -1 : 1;
             ChessComponent pawnChess = chessboard.getChessComponent(
                     chessComponent.getChessboardPoint().getX() + inv,
                     chessComponent.getChessboardPoint().getY());
             GroupUndoController groupUndoController = new GroupUndoController();
-            SwitchUndoController switchUndoController = new SwitchUndoController(pawnChess,
-                    new EmptySlotComponent(
-                            pawnChess.getChessboardPoint(),
-                            pawnChess.getLocation(),
-                            pawnChess.getClickController(),
-                            pawnChess.getSize().width),
-                    chessboard);
+            SwitchUndoController switchUndoController = new SwitchUndoController(pawnChess, new EmptySlotComponent(pawnChess.getChessboardPoint(), pawnChess.getLocation(), pawnChess.getClickController(), pawnChess.getSize().width), chessboard);
 
             groupUndoController.addUndoController(switchUndoController);
-            groupUndoController.addUndoController(new MoveUndoController(first, chessComponent, chessboard));
+            groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
+//            ChessGameFrame.record.append("\n"+ groupUndoController);
         } else if (actionType == ActionType.UPGRADE_PAWN) {
-            switchChessDlg.setVisible(true);
-            int switchType = switchChessDlg.getClickType();
-            System.out.println("click type is " + switchType);
-            ChessComponent newChess = null;
-            switch (switchType) {
-                case 1:
-                    newChess = new RookChessComponent(chessComponent.getChessboardPoint(),
-                            chessComponent.getLocation(),
-                            first.getChessColor(),
-                            chessComponent.getClickController(),
-                            chessComponent.getSize().width);
-                    break;
-                case 2:
-                    newChess = new KnightChessComponent(chessComponent.getChessboardPoint(),
-                            chessComponent.getLocation(),
-                            first.getChessColor(),
-                            chessComponent.getClickController(),
-                            chessComponent.getSize().width);
-                    break;
-                case 3:
-                    newChess = new BishopChessComponent(chessComponent.getChessboardPoint(),
-                            chessComponent.getLocation(),
-                            first.getChessColor(),
-                            chessComponent.getClickController(),
-                            chessComponent.getSize().width);
-                    break;
-                case 4:
-                    newChess = new QueenChessComponent(chessComponent.getChessboardPoint(),
-                            chessComponent.getLocation(),
-                            first.getChessColor(),
-                            chessComponent.getClickController(),
-                            chessComponent.getSize().width);
-                    break;
+            if (switchType == 0) {
+                switchChessDlg.setVisible(true);
+                switchType = switchChessDlg.getClickType();
             }
 
+            System.out.println("click type is " + switchType);
+
             GroupUndoController groupUndoController = new GroupUndoController();
-            groupUndoController.addUndoController(new MoveUndoController(first, chessComponent, chessboard));
-            SwitchUndoController switchUndoController = new SwitchUndoController(chessComponent, newChess, chessboard);
+            int newX = chessComponent.getChessboardPoint().getX();
+            int newY = chessComponent.getChessboardPoint().getY();
+            groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
+            ChessComponent newFirst = chessboard.getChessComponent(newX, newY);
+            SwitchUndoController switchUndoController = new SwitchUndoController(newFirst, switchType, chessboard);
             groupUndoController.addUndoController(switchUndoController);
             undoManagerController.add(groupUndoController);
+            ChessGameFrame.record.append("\n" + groupUndoController);
         } else if (actionType == ActionType.EXCHANGE_KING_AND_ROOK) {
             GroupUndoController groupUndoController = new GroupUndoController();
             int secondY = chessComponent.getChessboardPoint().getY();
             int rookY = 0;
             int emptyY = 0;
-            if (secondY > first.getChessboardPoint().getY()) {
-                rookY = first.getChessboardPoint().getY() + 3;
-                emptyY = first.getChessboardPoint().getY() + 1;
+            if (secondY > firstChess.getChessboardPoint().getY()) {
+                rookY = firstChess.getChessboardPoint().getY() + 3;
+                emptyY = firstChess.getChessboardPoint().getY() + 1;
             } else {
-                rookY = first.getChessboardPoint().getY() - 4;
-                emptyY = first.getChessboardPoint().getY() - 1;
+                rookY = firstChess.getChessboardPoint().getY() - 4;
+                emptyY = firstChess.getChessboardPoint().getY() - 1;
             }
-            ChessComponent rook = chessboard.getChessComponent(first.getChessboardPoint().getX(), rookY);
+            ChessComponent rook = chessboard.getChessComponent(firstChess.getChessboardPoint().getX(), rookY);
             if (!(rook instanceof RookChessComponent)) {
                 System.out.println("王车易位 未找到车");
             } else {
-                ChessComponent emptyChekk = chessboard.getChessComponent(first.getChessboardPoint().getX(), emptyY);
+                ChessComponent emptyChekk = chessboard.getChessComponent(firstChess.getChessboardPoint().getX(), emptyY);
                 groupUndoController.addUndoController(new MoveUndoController(rook, emptyChekk, chessboard));
             }
-            groupUndoController.addUndoController(new MoveUndoController(first, chessComponent, chessboard));
+            groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
+            ChessGameFrame.record.append("\n" + groupUndoController);
 
         } else {
-            undoManagerController.add(new MoveUndoController(first, chessComponent, chessboard));
+            MoveUndoController move = new MoveUndoController(firstChess, chessComponent, chessboard);
+            undoManagerController.add(move);
+            ChessGameFrame.record.append("\n" + move);
         }
     }
 }

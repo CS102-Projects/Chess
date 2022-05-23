@@ -1,6 +1,5 @@
 package controller;
 
-import javax.swing.undo.UndoManager;
 import java.util.ArrayList;
 
 public class GroupUndoController extends UndoController {
@@ -17,21 +16,32 @@ public class GroupUndoController extends UndoController {
 
     @Override
     public void undo() {
-        for (UndoController controller: undoList) {
-            controller.undo();
+        for (int i = undoList.size() - 1; i >= 0; i--) {
+            undoList.get(i).undo();
         }
+//        for (UndoController controller: undoList) {
+//            controller.undo();
+//        }
     }
 
     @Override
     public String toString() {
-        String result = new String();
+        StringBuilder result = new StringBuilder();
         for (UndoController undoController : undoList) {
             String s = undoController.toString();
-            if (!s.isEmpty()) {
-                result = result + "\n" + s;
+
+            if (s.isEmpty()) {
+                continue;
+            }
+
+            if (undoController instanceof SwitchUndoController) {
+                result = new StringBuilder(result.toString().replace("move", "upgrade"));
+                result.append(" ").append(s);
+            } else {
+                result.append("\n").append(s);
             }
         }
-        result = result.trim();
-        return result;
+        result = new StringBuilder(result.toString().trim());
+        return result.toString();
     }
 }

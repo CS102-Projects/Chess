@@ -9,7 +9,7 @@ public class SwitchChessDialog  extends JDialog {
     private int clickType = 0;
     public SwitchChessDialog(){
         this.setVisible(true);
-        this.setBounds(100,100,500,500);
+        this.setBounds(100, 100, 600, 500);
         Container container = this.getContentPane();
         container.setLayout(null);
         JLabel jLabel = new JLabel("选择要升级的类型");

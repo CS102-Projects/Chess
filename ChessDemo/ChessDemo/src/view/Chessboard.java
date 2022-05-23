@@ -2,16 +2,12 @@ package view;
 
 
 import controller.ChessEnablePathController;
+import controller.ClickController;
 import controller.StatusController;
 import model.*;
-import controller.ClickController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +29,7 @@ public class Chessboard extends JComponent {
     private static final int CHESSBOARD_SIZE = 8;
 
     private final ChessComponent[][] chessComponents = new ChessComponent[CHESSBOARD_SIZE][CHESSBOARD_SIZE];
-    private ChessColor currentColor = ChessColor.BLACK;
+    public static ChessColor currentColor = ChessColor.WHITE;
     //all chessComponents in this chessboard are shared only one model controller
     private final ClickController clickController = new ClickController(this);
     private final int CHESS_SIZE;
@@ -46,18 +42,16 @@ public class Chessboard extends JComponent {
         setSize(width, height);
         CHESS_SIZE = width / 8;
         System.out.printf("chessboard size = %d, chess size = %d\n", width, CHESS_SIZE);
+
         chessEnablePathController = new ChessEnablePathController(this);
         statusController = new StatusController(chessEnablePathController);
+
         reset();
     }
-
-
-
 
     public void reset()
     {
         initiateEmptyChessboard();
-
         // FIXME: Initialize chessboard for testing only.
         initRookOnBoard(0, 0, ChessColor.BLACK);
         initRookOnBoard(CHESSBOARD_SIZE - 1, 0, ChessColor.WHITE);
@@ -74,22 +68,36 @@ public class Chessboard extends JComponent {
         initKnightOnBoard(7, 1, ChessColor.WHITE);
         initKnightOnBoard(7, 6, ChessColor.WHITE);
         initQueenOnBoard(0, 3, ChessColor.BLACK);
-        initQueenOnBoard(CHESSBOARD_SIZE-1, 3, ChessColor.WHITE);
+        initQueenOnBoard(CHESSBOARD_SIZE - 1, 3, ChessColor.WHITE);
         for (int i = 0; i < CHESSBOARD_SIZE; i++) {
-            initPawnOnBoard(1,i, ChessColor.BLACK);
-            initPawnOnBoard(CHESSBOARD_SIZE-2,i, ChessColor.WHITE);
+            initPawnOnBoard(1, i, ChessColor.BLACK);
+            initPawnOnBoard(CHESSBOARD_SIZE - 2, i, ChessColor.WHITE);
         }
 
+        for (ChessComponent[] chessComponent : chessComponents) {
+            for (ChessComponent component : chessComponent) {
+                component.repaint();
+            }
+        }
 
+        currentColor = ChessColor.WHITE;
+        clickController.clear();
     }
 
+    public void clearStatu() {
+        clickController.clear();
+    }
+
+    public void moveChess(ChessboardPoint from, ChessboardPoint to, int switchType) {
+        clickController.moveChessByFile(from, to, switchType);
+    }
 
     public void clearPath() {
         ChessComponent[][] components = getChessComponents();
-        for (int i = 0; i < components.length; ++i) {
-            for (int j = 0; j < components[i].length; ++j) {
-                components[i][j].setEnablePath(false);
-                components[i][j].repaint();
+        for (ChessComponent[] component : components) {
+            for (ChessComponent chessComponent : component) {
+                chessComponent.setShowType(0);
+                chessComponent.repaint();
             }
         }
     }
@@ -98,12 +106,29 @@ public class Chessboard extends JComponent {
         clearPath();
 
         ArrayList<ChessComponent> path = chessEnablePathController.getEnablePath(chessComponent);
-        for (ChessComponent chess: path) {
+        ArrayList<ChessboardPoint> safePath = chessEnablePathController.getSafePath(chessComponent);
+//        ArrayList<ChessboardPoint> defendPath = chessEnablePathController.getDefendPath(chessComponent);
+
+        for (ChessComponent chess : path) {
             if (chess != null) {
-                chess.setEnablePath(true);
+                boolean isSafePoint = false;
+                for (ChessboardPoint point : safePath) {
+                    if (chess.getChessboardPoint().equal(point)) {
+                        isSafePoint = true;
+                        break;
+                    }
+                }
+                if (isSafePoint) {
+                    chess.setShowType(1);
+                } else {
+                    chess.setShowType(2);
+                }
+
                 chess.repaint();
             }
         }
+
+
     }
     public ChessComponent[][] getChessComponents() {
         return chessComponents;
@@ -128,7 +153,7 @@ public class Chessboard extends JComponent {
         for (int i = 0; i < chessComponents.length; ++i) {
             for (int j = 0; j < chessComponents[i].length; ++j) {
                 if (chessComponents[i][j].getChessColor() == color &&
-                chessComponents[i][j] instanceof KingChessComponent) {
+                        chessComponents[i][j] instanceof KingChessComponent) {
                     return chessComponents[i][j];
                 }
             }
@@ -186,6 +211,8 @@ public class Chessboard extends JComponent {
 
     public ArrayList<ChessboardPoint> getEnablePoints(ChessComponent chessComponent) {
         ArrayList<ChessboardPoint> result = new ArrayList<>();
+
+
         return result;
     }
 
@@ -260,6 +287,4 @@ public class Chessboard extends JComponent {
     public StatusController getStatusController() {
         return statusController;
     }
-
-
 }
