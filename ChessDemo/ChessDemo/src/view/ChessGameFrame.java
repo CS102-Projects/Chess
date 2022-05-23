@@ -278,7 +278,7 @@ public class ChessGameFrame extends JFrame {
             byte[] buffer = new byte[SIZE];
             while (nByte != -1) {
                 nByte = ais.read(buffer, 0, SIZE);
-//                sdl.write(buffer, 0, nByte);
+              sdl.write(buffer, 0, nByte);
             }
             sdl.stop();
 
