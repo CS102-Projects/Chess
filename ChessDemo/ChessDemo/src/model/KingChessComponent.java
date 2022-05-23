@@ -1,8 +1,8 @@
 package model;
 
 import controller.ChessEnablePathController;
-import controller.ClickController;
 import view.ChessboardPoint;
+import controller.ClickController;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -32,10 +32,10 @@ public class KingChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (KING_WHITE == null) {
-            KING_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/king-white.png"));
+            KING_WHITE = ImageIO.read(new File("D:/image_new/4.png"));
         }
         if (KING_BLACK == null) {
-            KING_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/king-black.png"));
+            KING_BLACK = ImageIO.read(new File("D:/image_new/7.png"));
         }
     }
 
@@ -60,11 +60,6 @@ public class KingChessComponent extends ChessComponent {
 
     public KingChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
-        if (color == ChessColor.BLACK) {
-            this.name = 'K';
-        } else if (color == ChessColor.WHITE) {
-            this.name = 'k';
-        }
         initiateKingImage(color);
     }
 
@@ -112,10 +107,7 @@ public class KingChessComponent extends ChessComponent {
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
         g.drawImage(kingImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
-            g.setColor(Color.RED);
-            g.drawOval(0, 0, getWidth() , getHeight());
-        }
+
     }
 }
 

@@ -1,7 +1,7 @@
 package model;
 
-import controller.ClickController;
 import view.ChessboardPoint;
+import controller.ClickController;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -31,10 +31,10 @@ public class BishopChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (BISHOP_WHITE == null) {
-            BISHOP_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/bishop-white.png"));
+            BISHOP_WHITE = ImageIO.read(new File("D:/image_new/3.png"));
         }
         if (BISHOP_BLACK == null) {
-            BISHOP_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/bishop-black.png"));
+            BISHOP_BLACK = ImageIO.read(new File("D:/image_new/8.png"));
         }
     }
 
@@ -59,11 +59,6 @@ public class BishopChessComponent extends ChessComponent {
 
     public BishopChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
-        if (color == ChessColor.BLACK) {
-            this.name = 'B';
-        } else if (color == ChessColor.WHITE) {
-            this.name = 'b';
-        }
         initiateBishopImage(color);
     }
 
@@ -127,9 +122,6 @@ public class BishopChessComponent extends ChessComponent {
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
         g.drawImage(bishopImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
-            g.setColor(Color.RED);
-            g.drawOval(0, 0, getWidth() , getHeight());
-        }
+
     }
 }
