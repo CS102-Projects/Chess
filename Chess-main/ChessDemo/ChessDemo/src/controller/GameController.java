@@ -11,7 +11,6 @@ public class GameController {
     private Chessboard chessboard;
     private StoreController storeController;
 
-
     public GameController(Chessboard chessboard) {
         this.chessboard = chessboard;
         storeController = new StoreController();
@@ -32,13 +31,10 @@ public class GameController {
 
     public void reset() {
         chessboard.reset();
-        UndoManagerController.getInstance().clear();
     }
 
     public Boolean undo()
     {
-        chessboard.swapColor();
-        chessboard.clearPath();
         return UndoManagerController.getInstance().undo();
     }
 

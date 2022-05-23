@@ -1,11 +1,18 @@
 package view;
 
 
+import controller.ChessEnablePathController;
+import controller.StatusController;
 import model.*;
 import controller.ClickController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,14 +38,24 @@ public class Chessboard extends JComponent {
     private final ClickController clickController = new ClickController(this);
     private final int CHESS_SIZE;
 
-
+    private ChessEnablePathController chessEnablePathController;
+    private StatusController statusController;
 
     public Chessboard(int width, int height) {
         setLayout(null); // Use absolute layout.
         setSize(width, height);
         CHESS_SIZE = width / 8;
         System.out.printf("chessboard size = %d, chess size = %d\n", width, CHESS_SIZE);
+        chessEnablePathController = new ChessEnablePathController(this);
+        statusController = new StatusController(chessEnablePathController);
+        reset();
+    }
 
+
+
+
+    public void reset()
+    {
         initiateEmptyChessboard();
 
         // FIXME: Initialize chessboard for testing only.
@@ -62,14 +79,62 @@ public class Chessboard extends JComponent {
             initPawnOnBoard(1,i, ChessColor.BLACK);
             initPawnOnBoard(CHESSBOARD_SIZE-2,i, ChessColor.WHITE);
         }
+
+
     }
 
+
+    public void clearPath() {
+        ChessComponent[][] components = getChessComponents();
+        for (int i = 0; i < components.length; ++i) {
+            for (int j = 0; j < components[i].length; ++j) {
+                components[i][j].setEnablePath(false);
+                components[i][j].repaint();
+            }
+        }
+    }
+
+    public void showEnablePath(ChessComponent chessComponent) {
+        clearPath();
+
+        ArrayList<ChessComponent> path = chessEnablePathController.getEnablePath(chessComponent);
+        for (ChessComponent chess: path) {
+            if (chess != null) {
+                chess.setEnablePath(true);
+                chess.repaint();
+            }
+        }
+    }
     public ChessComponent[][] getChessComponents() {
         return chessComponents;
     }
 
+    public ChessComponent getChessComponent(int row, int col) {
+        if (row < 0 || row > 7 || col < 0 || col > 7) {
+            return null;
+        }
+        return chessComponents[row][col];
+    }
+
+    public ChessComponent getChessComponent(ChessboardPoint point) {
+        return getChessComponent(point.getX(), point.getY());
+    }
+
     public ChessColor getCurrentColor() {
         return currentColor;
+    }
+
+    public ChessComponent getKing(ChessColor color) {
+        for (int i = 0; i < chessComponents.length; ++i) {
+            for (int j = 0; j < chessComponents[i].length; ++j) {
+                if (chessComponents[i][j].getChessColor() == color &&
+                chessComponents[i][j] instanceof KingChessComponent) {
+                    return chessComponents[i][j];
+                }
+            }
+        }
+
+        return null;
     }
 
     public void putChessOnBoard(ChessComponent chessComponent) {
@@ -95,6 +160,41 @@ public class Chessboard extends JComponent {
 
         chess1.repaint();
         chess2.repaint();
+    }
+
+    public void pureSwapChessComponents(ChessComponent chess1, ChessComponent chess2) {
+        chess1.swapLocation(chess2);
+        int row1 = chess1.getChessboardPoint().getX(), col1 = chess1.getChessboardPoint().getY();
+        chessComponents[row1][col1] = chess1;
+        int row2 = chess2.getChessboardPoint().getX(), col2 = chess2.getChessboardPoint().getY();
+        chessComponents[row2][col2] = chess2;
+    }
+
+    public void undoChessComponents(ChessComponent chess1, ChessComponent chess2) {
+        int row1 = chess1.getChessboardPoint().getX(), col1 = chess1.getChessboardPoint().getY();
+        remove(chessComponents[row1][col1]);
+        add(chess1);
+        chessComponents[row1][col1] = chess1;
+        int row2 = chess2.getChessboardPoint().getX(), col2 = chess2.getChessboardPoint().getY();
+        remove(chessComponents[row2][col2]);
+        add(chess2);
+        chessComponents[row2][col2] = chess2;
+
+        chess1.repaint();
+        chess2.repaint();
+    }
+
+    public ArrayList<ChessboardPoint> getEnablePoints(ChessComponent chessComponent) {
+        ArrayList<ChessboardPoint> result = new ArrayList<>();
+        return result;
+    }
+
+    public boolean checkChess(ChessComponent chess1) {
+        int row1 = chess1.getChessboardPoint().getX(), col1 = chess1.getChessboardPoint().getY();
+        if (chessComponents[row1][col1] != chess1) {
+            return false;
+        }
+        return true;
     }
 
     public void initiateEmptyChessboard() {
@@ -156,4 +256,10 @@ public class Chessboard extends JComponent {
     public void loadGame(List<String> chessData) {
         chessData.forEach(System.out::println);
     }
+
+    public StatusController getStatusController() {
+        return statusController;
+    }
+
+
 }

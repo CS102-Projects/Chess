@@ -31,10 +31,10 @@ public class KnightChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (KNIGHT_WHITE == null) {
-            KNIGHT_WHITE = ImageIO.read(new File("D:/images/knight-white.png"));
+            KNIGHT_WHITE = ImageIO.read(new File("D:/image_new/2.png"));
         }
         if (KNIGHT_BLACK == null) {
-            KNIGHT_BLACK = ImageIO.read(new File("D:/images/knight-black.png"));
+            KNIGHT_BLACK = ImageIO.read(new File("D:/image_new/9.png"));
         }
     }
 
@@ -62,6 +62,15 @@ public class KnightChessComponent extends ChessComponent {
         initiateKnightImage(color);
     }
 
+    @Override
+    public ChessComponent clone()
+    {
+        KnightChessComponent knightChessComponent = new KnightChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
+        knightChessComponent.curStep = this.curStep;
+        knightChessComponent.stepCount = this.stepCount;
+        return knightChessComponent;
+    }
+
     /**
      * 车棋子的移动规则
      *
@@ -72,6 +81,13 @@ public class KnightChessComponent extends ChessComponent {
 
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
+        int x2 = destination.getX();
+        int y2 = destination.getY();
+
+        if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) {
+            return false;
+        }
+
         ChessboardPoint source = getChessboardPoint();
         if ((Math.abs(source.getX()-destination.getX())==1)&&(Math.abs(source.getY()-destination.getY())==2)){
             return true;
@@ -90,9 +106,6 @@ public class KnightChessComponent extends ChessComponent {
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
         g.drawImage(knightImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
-            g.setColor(Color.RED);
-            g.drawOval(0, 0, getWidth() , getHeight());
-        }
+
     }
 }

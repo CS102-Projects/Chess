@@ -30,10 +30,10 @@ public class QueenChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (QUEEN_WHITE == null) {
-            QUEEN_WHITE = ImageIO.read(new File("D:/images/queen-white.png"));
+            QUEEN_WHITE = ImageIO.read(new File("D:/image_new/5.png"));
         }
         if (QUEEN_BLACK == null) {
-            QUEEN_BLACK = ImageIO.read(new File("D:/images/queen-black.png"));
+            QUEEN_BLACK = ImageIO.read(new File("D:/image_new/11.png"));
         }
 
     }
@@ -57,6 +57,15 @@ public class QueenChessComponent extends ChessComponent {
         initiateQueenImage(color);
     }
 
+    @Override
+    public ChessComponent clone()
+    {
+        QueenChessComponent queenChessComponent = new QueenChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
+        queenChessComponent.curStep = this.curStep;
+        queenChessComponent.stepCount = this.stepCount;
+        return queenChessComponent;
+    }
+
     /**
      * 车棋子的移动规则
      *
@@ -67,6 +76,13 @@ public class QueenChessComponent extends ChessComponent {
 
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
+        int x2 = destination.getX();
+        int y2 = destination.getY();
+
+        if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) {
+            return false;
+        }
+
         ChessboardPoint source = getChessboardPoint();
         if (source.getX()-destination.getX()==source.getY()-destination.getY()){
             int row = Math.min(source.getX(),destination.getX());int col =  Math.min(source.getY(),destination.getY());
@@ -116,9 +132,6 @@ public class QueenChessComponent extends ChessComponent {
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
         g.drawImage(queenImage, 1, 1, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
-            g.setColor(Color.RED);
-            g.drawOval(1, 1, getWidth() , getHeight());
-        }
+
     }
 }

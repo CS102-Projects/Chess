@@ -31,10 +31,10 @@ public class BishopChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (BISHOP_WHITE == null) {
-            BISHOP_WHITE = ImageIO.read(new File("D:/images/bishop-white.png"));
+            BISHOP_WHITE = ImageIO.read(new File("D:/image_new/3.png"));
         }
         if (BISHOP_BLACK == null) {
-            BISHOP_BLACK = ImageIO.read(new File("D:/images/bishop-black.png"));
+            BISHOP_BLACK = ImageIO.read(new File("D:/image_new/8.png"));
         }
     }
 
@@ -62,6 +62,15 @@ public class BishopChessComponent extends ChessComponent {
         initiateBishopImage(color);
     }
 
+    @Override
+    public ChessComponent clone()
+    {
+        BishopChessComponent bishopChessComponent = new BishopChessComponent(getChessboardPoint(), getLocation(), getChessColor(), clickController, getSize().width);
+        bishopChessComponent.curStep = this.curStep;
+        bishopChessComponent.stepCount = this.stepCount;
+        return bishopChessComponent;
+    }
+
     /**
      * 车棋子的移动规则
      *
@@ -72,6 +81,13 @@ public class BishopChessComponent extends ChessComponent {
 
     @Override
     public boolean canMoveTo(ChessComponent[][] chessComponents, ChessboardPoint destination) {
+        int x2 = destination.getX();
+        int y2 = destination.getY();
+
+        if (x2 < 0 || x2 > 7 || y2 < 0 || y2 > 7) {
+            return false;
+        }
+
         ChessboardPoint source = getChessboardPoint();
         if (source.getX()-destination.getX()==source.getY()-destination.getY()){
             int row = Math.min(source.getX(),destination.getX());int col =  Math.min(source.getY(),destination.getY());
@@ -106,9 +122,6 @@ public class BishopChessComponent extends ChessComponent {
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
         g.drawImage(bishopImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
-            g.setColor(Color.RED);
-            g.drawOval(0, 0, getWidth() , getHeight());
-        }
+
     }
 }
