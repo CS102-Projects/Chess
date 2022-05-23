@@ -171,7 +171,7 @@ public class ClickController {
             groupUndoController.addUndoController(switchUndoController);
             groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
-//            ChessGameFrame.record.append("\n"+ groupUndoController);
+            ChessGameFrame.record.append("\n" + groupUndoController);
         } else if (actionType == ActionType.UPGRADE_PAWN) {
             if (switchType == 0) {
                 switchChessDlg.setVisible(true);
@@ -216,6 +216,7 @@ public class ClickController {
             MoveUndoController move = new MoveUndoController(firstChess, chessComponent, chessboard);
             undoManagerController.add(move);
             ChessGameFrame.record.append("\n" + move);
+            ChessGameFrame.record.setCaretPosition(ChessGameFrame.record.getText().length());
         }
     }
 }

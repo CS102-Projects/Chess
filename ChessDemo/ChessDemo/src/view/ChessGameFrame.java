@@ -3,7 +3,6 @@ package view;
 import controller.GameController;
 
 import javax.swing.*;
-import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -79,8 +78,8 @@ public class ChessGameFrame extends JFrame {
         Dimension size = record.getPreferredSize();    //获得文本域的首选大小
         jsp.setBounds(HEIGHT + 300, HEIGHT / 10, size.width, size.height);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        DefaultCaret caret = (DefaultCaret) record.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+//        DefaultCaret caret = (DefaultCaret) record.getCaret();
+//        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         moveRecord.add(jsp);//将JScrollPane添加到JPanel容器中
         add(moveRecord);
     }

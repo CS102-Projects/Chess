@@ -18,28 +18,13 @@ public class SwitchUndoController extends UndoController {
         switchType = _switchType;
 
         switch (switchType) {
-            case 1 -> newChess = new RookChessComponent(chess.getChessboardPoint(),
-                    chess.getLocation(),
-                    chess.getChessColor(),
-                    chess.getClickController(),
-                    chess.getSize().width);
-            case 2 -> newChess = new KnightChessComponent(chess.getChessboardPoint(),
-                    chess.getLocation(),
-                    chess.getChessColor(),
-                    chess.getClickController(),
-                    chess.getSize().width);
-            case 3 -> newChess = new BishopChessComponent(chess.getChessboardPoint(),
-                    chess.getLocation(),
-                    chess.getChessColor(),
-                    chess.getClickController(),
-                    chess.getSize().width);
-            case 4 -> newChess = new QueenChessComponent(chess.getChessboardPoint(),
-                    chess.getLocation(),
-                    chess.getChessColor(),
-                    chess.getClickController(),
-                    chess.getSize().width);
+            case 1 -> newChess = new RookChessComponent(chess.getChessboardPoint(), chess.getLocation(), chess.getChessColor(), chess.getClickController(), chess.getSize().width);
+            case 2 -> newChess = new KnightChessComponent(chess.getChessboardPoint(), chess.getLocation(), chess.getChessColor(), chess.getClickController(), chess.getSize().width);
+            case 3 -> newChess = new BishopChessComponent(chess.getChessboardPoint(), chess.getLocation(), chess.getChessColor(), chess.getClickController(), chess.getSize().width);
+            case 4 -> newChess = new QueenChessComponent(chess.getChessboardPoint(), chess.getLocation(), chess.getChessColor(), chess.getClickController(), chess.getSize().width);
         }
 
+        assert newChess != null;
         chessboard.putChessOnBoard(newChess);
         newChess.repaint();
     }
