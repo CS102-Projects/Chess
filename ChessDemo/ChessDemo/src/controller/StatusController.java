@@ -9,6 +9,8 @@ import view.ChessboardPoint;
 import java.util.ArrayList;
 
 public class StatusController {
+    public static int blackHikedCount = 0;
+    public static int whiteHikedCount = 0;
 
     private ChessEnablePathController chessEnablePathController;
 
@@ -30,13 +32,20 @@ public class StatusController {
                     }
                     for (ChessComponent component : arrayList) {
                         if (component instanceof KingChessComponent) {
+                            if (color == ChessColor.BLACK) {
+                                whiteHikedCount++;
+                            } else {
+                                blackHikedCount++;
+                            }
                             return true;
                         }
                     }
                 }
             }
         }
-
+        if (color == ChessColor.BLACK) {
+            whiteHikedCount = 0;
+        } else blackHikedCount = 0;
         return false;
     }
 
@@ -111,5 +120,13 @@ public class StatusController {
         return true;
     }
 
-
+    public boolean isContinueHikingDraw(ChessColor color, Chessboard chessboard) {
+        if (color == ChessColor.BLACK) {
+            System.out.println(blackHikedCount);
+            return blackHikedCount == 5;
+        } else {
+            System.out.println(whiteHikedCount);
+            return whiteHikedCount == 5;
+        }
+    }
 }

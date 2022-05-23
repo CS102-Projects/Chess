@@ -85,6 +85,13 @@ public class ClickController {
                     chessboard.reset();
                     UndoManagerController.getInstance().clear();
                 }
+            } else if (chessboard.getStatusController().isContinueHikingDraw(enemyColor, chessboard)) {
+                System.out.println("Draw");
+                int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    chessboard.reset();
+                    UndoManagerController.getInstance().clear();
+                }
             }
         }
         if (chessboard.getStatusController().isCanNotMoveDraw(enemyColor, chessboard)) {
@@ -95,6 +102,7 @@ public class ClickController {
                 UndoManagerController.getInstance().clear();
             }
         }
+
         chessboard.swapColor();
         ChessGameFrame.currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
     }
