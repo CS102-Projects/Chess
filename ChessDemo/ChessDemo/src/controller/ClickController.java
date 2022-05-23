@@ -1,6 +1,5 @@
 package controller;
 
-
 import model.*;
 import view.ChessGameFrame;
 import view.Chessboard;
@@ -17,7 +16,6 @@ public class ClickController {
 
     private UndoManagerController undoManagerController;
     private SwitchChessDialog switchChessDlg;
-
 
     public ClickController(Chessboard chessboard) {
         this.chessboard = chessboard;
