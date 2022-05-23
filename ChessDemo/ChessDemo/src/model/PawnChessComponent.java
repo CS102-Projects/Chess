@@ -1,12 +1,14 @@
 package model;
 
-import controller.ClickController;
 import view.ChessboardPoint;
+import controller.ClickController;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 这个类表示国际象棋里面的车
@@ -31,10 +33,10 @@ public class PawnChessComponent extends ChessComponent {
      */
     public void loadResource() throws IOException {
         if (PAWN_WHITE == null) {
-            PAWN_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/pawn-white.png"));
+            PAWN_WHITE = ImageIO.read(new File("D:/image_new/6.png"));
         }
         if (PAWN_BLACK == null) {
-            PAWN_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/pawn-black.png"));
+            PAWN_BLACK = ImageIO.read(new File("D:/image_new/12.png"));
         }
 
     }
@@ -61,11 +63,6 @@ public class PawnChessComponent extends ChessComponent {
 
     public PawnChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor color, ClickController listener, int size) {
         super(chessboardPoint, location, color, listener, size);
-        if (color == ChessColor.BLACK) {
-            this.name = 'P';
-        } else if (color == ChessColor.WHITE) {
-            this.name = 'p';
-        }
         initiatePawnImage(color);
     }
 
@@ -140,12 +137,13 @@ public class PawnChessComponent extends ChessComponent {
 
             // 前方是否有其它棋子
             int frontX = getChessColor() == ChessColor.BLACK ? 1 : -1;
-            return !hasBarrier(chessComponents, x1, y1, x2 + frontX, y2);
+            if (hasBarrier(chessComponents, x1, y1, x2+frontX, y2)) {
+                return false;
+            }
         } else {
-            int invX = x2 - x1;
-            int invY = y2 - y1;
+            int inv = x2 - x1;
             // 斜着只能前进一步
-            if (Math.abs(invX) != 1 || Math.abs(invY) != 1) {
+            if (Math.abs(inv) != 1) {
                 return false;
             }
             // 不能吃自己方的棋子
@@ -153,11 +151,11 @@ public class PawnChessComponent extends ChessComponent {
                 return false;
             }
             // 不能后退
-            if (getChessColor() == ChessColor.BLACK && invX < 0) {
+            if (getChessColor() == ChessColor.BLACK && inv < 0) {
                 return false;
             }
             // 不能后退
-            if (getChessColor() == ChessColor.WHITE && invX > 0) {
+            if (getChessColor() == ChessColor.WHITE && inv > 0) {
                 return false;
             }
 
@@ -178,11 +176,13 @@ public class PawnChessComponent extends ChessComponent {
 
                 // 判断是否有过路兵
                 ChessComponent chess = chessComponents[xx][y2];
-                // 判断该棋子是否只走过一步
-                return chess.getChessColor() != getChessColor() &&
-                        chess instanceof PawnChessComponent &&
-                        chess.isNewestStep() &&   // 判断上一步走的是不是该棋子
-                        (1 == chess.getStepCount());
+                if (chess.getChessColor() == getChessColor() ||
+                        !(chess instanceof PawnChessComponent) ||
+                        !chess.isNewestStep() ||   // 判断上一步走的是不是该棋子
+                        (1 != chess.getStepCount())  // 判断该棋子是否只走过一步
+                ) {
+                    return false;
+                }
             }
 
         }
@@ -201,10 +201,7 @@ public class PawnChessComponent extends ChessComponent {
 //        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
         g.drawImage(pawnImage, 0, 0, getWidth() , getHeight(), this);
         g.setColor(Color.BLACK);
-        if (isSelected()) { // Highlights the model if selected.
-            g.setColor(Color.RED);
-            g.drawOval(0, 0, getWidth() , getHeight());
-        }
+
     }
 }
 

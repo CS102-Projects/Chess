@@ -1,12 +1,16 @@
 package model;
 
-import controller.ClickController;
 import view.ChessboardPoint;
+import controller.ClickController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 这个类是一个抽象类，主要表示8*8棋盘上每个格子的棋子情况，当前有两个子类继承它，分别是EmptySlotComponent(空棋子)和RookChessComponent(车)。
@@ -22,11 +26,17 @@ public abstract class ChessComponent extends JComponent {
      */
 
 //    private static final Dimension CHESSGRID_SIZE = new Dimension(1080 / 4 * 3 / 8, 1080 / 4 * 3 / 8);
-    private static final Color[] BACKGROUND_COLORS = {Color.WHITE, Color.BLACK};
+    private static  Color[] BACKGROUND_COLORS = {new Color(244,242,213), new Color(111,155,90)};
+    private static  Color[] ENTER_COLORS = {new Color(245,236,138), new Color(245,236,138)};
+    private static  Color[] SELECT_COLORS = {new Color(197,191,116), new Color(197,191,116)};
+
+    //green:new Color(111,155,90)
+    //blue:new Color(74,150,194)
     /**
      * handle click event
      */
     protected ClickController clickController;
+
     private static int totalStepCount = 0;
     protected int stepCount;
     protected int curStep;
@@ -41,13 +51,9 @@ public abstract class ChessComponent extends JComponent {
     private ChessboardPoint chessboardPoint;
     protected final ChessColor chessColor;
     private boolean selected;
-    protected char name;
 
-    public char getname() {
-        return name;
-    }
-
-    private int showType;
+    private boolean isEnablePath;
+    private boolean isMouseEnter;
 
     protected ChessComponent(ChessboardPoint chessboardPoint, Point location, ChessColor chessColor, ClickController clickController, int size) {
         enableEvents(AWTEvent.MOUSE_EVENT_MASK);
@@ -59,7 +65,27 @@ public abstract class ChessComponent extends JComponent {
         this.clickController = clickController;
         this.curStep = 0;
         this.stepCount = 0;
+        changecolor(this);
+        this.repaint();
+
     }
+
+    public void changecolor(ChessComponent c) {
+        c.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {  //鼠标移上去
+                c.setBackground(Color.red);
+            }
+        });
+        c.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseExited(MouseEvent e) {  //鼠标离开
+                c.setBackground(Color.WHITE);
+            }
+        });
+
+    }
+
 
     public ClickController getClickController() {
         return clickController;
@@ -85,8 +111,8 @@ public abstract class ChessComponent extends JComponent {
         this.selected = selected;
     }
 
-    public void setShowType(int type) {
-        showType = type;
+    public void setEnablePath(boolean enablePath) {
+        isEnablePath = enablePath;
     }
 
     public void incrementStep() {
@@ -140,10 +166,18 @@ public abstract class ChessComponent extends JComponent {
     @Override
     protected void processMouseEvent(MouseEvent e) {
         super.processMouseEvent(e);
+        //mouse event 对象被鼠标点击之后会调用这个方法
 
         if (e.getID() == MouseEvent.MOUSE_PRESSED) {
             System.out.printf("Click [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
             clickController.onClick(this);
+        }
+        //输出一个坐标
+        if (e.getID() == MouseEvent.MOUSE_ENTERED){
+            isMouseEnter=true;
+        }
+        if (e.getID() == MouseEvent.MOUSE_EXITED){
+            isMouseEnter=false;
         }
     }
 
@@ -168,8 +202,19 @@ public abstract class ChessComponent extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponents(g);
         //System.out.printf("repaint chess [%d,%d]\n", chessboardPoint.getX(), chessboardPoint.getY());
+
+        if (isMouseEnter){
+            Color squareColor = ENTER_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
+            g.setColor(squareColor);
+        }else{
         Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
-        g.setColor(squareColor);
+        g.setColor(squareColor);}
+
+
+        if(isSelected()){
+            Color squareColor = SELECT_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
+            g.setColor(squareColor);
+        }
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
         Font f = new Font("Comic Sans MS", Font.BOLD, 13);
@@ -178,30 +223,21 @@ public abstract class ChessComponent extends JComponent {
 //        String ss = "("+getChessboardPoint().getX() + ","+getChessboardPoint().getY()+") ";
 //        g.drawString(ss, 20, 20);
 
-        if (showType == 1) {
-            g.setColor(Color.green);
-            drawPathType(g);
-        } else if (showType == 2) {
-            g.setColor(Color.gray);
-            drawPathType(g);
-        } else if (showType == 3) {
-            g.setColor(Color.red);
-            drawPathType(g);
+        if (isEnablePath) {
+            g.fillRect(8, 8, 20, 5);
+            g.fillRect(8, 8, 5, 20);
+
+            g.fillRect(getWidth() - 8 - 20, 8, 20, 5);
+            g.fillRect(getWidth() - 8 - 5, 8, 5, 20);
+
+            g.fillRect(8, getHeight() - 8 - 5, 20, 5);
+            g.fillRect(8, getHeight() - 8 - 20, 5, 20);
+
+            g.fillRect(getWidth() - 8 - 20, getHeight() - 8 - 5, 20, 5);
+            g.fillRect(getWidth() - 8 - 5, getHeight() - 8 - 20, 5, 20);
         }
     }
 
-    private void drawPathType(Graphics g) {
-        g.fillRect(8, 8, 20, 5);
-        g.fillRect(8, 8, 5, 20);
 
-        g.fillRect(getWidth() - 8 - 20, 8, 20, 5);
-        g.fillRect(getWidth() - 8 - 5, 8, 5, 20);
-
-        g.fillRect(8, getHeight() - 8 - 5, 20, 5);
-        g.fillRect(8, getHeight() - 8 - 20, 5, 20);
-
-        g.fillRect(getWidth() - 8 - 20, getHeight() - 8 - 5, 20, 5);
-        g.fillRect(getWidth() - 8 - 5, getHeight() - 8 - 20, 5, 20);
-    }
 
 }

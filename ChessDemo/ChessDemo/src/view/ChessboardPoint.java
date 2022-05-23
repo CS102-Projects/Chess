@@ -20,10 +20,6 @@ public class ChessboardPoint {
         return y;
     }
 
-    public boolean equal(ChessboardPoint other) {
-        return (this.x == other.getX() && this.y == other.getY());
-    }
-
     @Override
     public String toString() {
         return "("+x + ","+y+") " + "on the chessboard is clicked!";

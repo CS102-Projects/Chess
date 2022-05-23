@@ -10,6 +10,7 @@ public class UndoManagerController {
         undostack = new Stack<>();
     }
 
+
     private static UndoManagerController instance = new UndoManagerController();
 
     //4.提供公共的静态的方法，返回类的对象
@@ -21,11 +22,7 @@ public class UndoManagerController {
         undostack.push(undoController);
     }
 
-    public boolean canUndo() {
-        return !undostack.empty();
-    }
-
-    public boolean undo() {
+    public Boolean undo() {
         if (!undostack.empty()) {
             UndoController object = undostack.pop();
             object.undo();
@@ -34,15 +31,14 @@ public class UndoManagerController {
         return false;
     }
 
-    @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        String result = new String();
         for (UndoController controller: undostack) {
             if (!controller.toString().isEmpty()) {
-                result.append("\n").append(controller);
+                result = result + "\n" + controller.toString();
             }
         }
-        return result.toString();
+        return result;
     }
 
     public void clear() {
