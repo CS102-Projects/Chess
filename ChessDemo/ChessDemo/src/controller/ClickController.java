@@ -68,7 +68,6 @@ public class ClickController {
 
         ActionType actionType = calcActionType(chess1, chess2);
         handleAction(chess1, chess2, actionType);
-
         move(chess1);
     }
 
@@ -172,7 +171,7 @@ public class ClickController {
             groupUndoController.addUndoController(switchUndoController);
             groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
-//            ChessGameFrame.record.append("\n"+ groupUndoController);
+            ChessGameFrame.record.append("\n"+ groupUndoController);
         } else if (actionType == ActionType.UPGRADE_PAWN) {
             if (switchType == 0) {
                 switchChessDlg.setVisible(true);
