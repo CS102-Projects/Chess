@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
+import static view.ChessGameFrame.*;
+
 /**
  * 这个类是一个抽象类，主要表示8*8棋盘上每个格子的棋子情况，当前有两个子类继承它，分别是EmptySlotComponent(空棋子)和RookChessComponent(车)。
  */
@@ -22,7 +24,10 @@ public abstract class ChessComponent extends JComponent {
      */
 
 //    private static final Dimension CHESSGRID_SIZE = new Dimension(1080 / 4 * 3 / 8, 1080 / 4 * 3 / 8);
-    private static Color[] BACKGROUND_COLORS = {new Color(244, 242, 213), new Color(111, 155, 90)};
+    private static Color[] BACKGROUND_COLORS1 = {new Color(244, 242, 213), new Color(111, 155, 90)};
+    private static Color[] BACKGROUND_COLORS2 = {new Color(244, 242, 213), new Color(97,139,187)};
+    private static Color[] BACKGROUND_COLORS3 = {new Color(244, 242, 213), new Color(215,158,158)};
+
     private static Color[] ENTER_COLORS = {new Color(245, 236, 138), new Color(245, 236, 138)};
     private static Color[] SELECT_COLORS = {new Color(197, 191, 116), new Color(197, 191, 116)};
     /**
@@ -195,8 +200,16 @@ public abstract class ChessComponent extends JComponent {
             Color squareColor = ENTER_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
             g.setColor(squareColor);
         } else {
-            Color squareColor = BACKGROUND_COLORS[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
-            g.setColor(squareColor);
+            if (is1) {
+                Color squareColor = BACKGROUND_COLORS1[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
+                g.setColor(squareColor);
+            }else if (is2){
+                Color squareColor = BACKGROUND_COLORS2[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
+                g.setColor(squareColor);
+            }else if (is3){
+                Color squareColor = BACKGROUND_COLORS3[(chessboardPoint.getX() + chessboardPoint.getY()) % 2];
+                g.setColor(squareColor);
+            }
         }
 
 

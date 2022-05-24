@@ -6,6 +6,7 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -22,6 +23,10 @@ public class ChessGameFrame extends JFrame {
     public static JTextArea record = new JTextArea("MoveRecord", 20, 20);
     private static JLabel background;
     private static boolean flag = true;
+    public static boolean is1 = true;
+    public static boolean is2 = false;
+    public static boolean is3 = false;
+
 
     public ChessGameFrame(int width, int height) {
 
@@ -33,7 +38,7 @@ public class ChessGameFrame extends JFrame {
 
         background = new JLabel();
         background.setBounds(0, 0, this.getWidth(), this.getHeight());
-        ImageIcon imageIcon = new ImageIcon("C:\\Users\\zhang\\Desktop\\cutecute\\flower.jpg");
+        ImageIcon imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/flower.jpg");
         Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
         imageIcon.setImage(scaledImage);
         background.setIcon(imageIcon);
@@ -99,6 +104,10 @@ public class ChessGameFrame extends JFrame {
         DefaultCaret caret = (DefaultCaret) record.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         moveRecord.add(jsp);//将JScrollPane添加到JPanel容器中
+
+        moveRecord.setBorder(null);
+        moveRecord.setOpaque(false); //设置背景透明
+
         j.add(moveRecord);
     }
 
@@ -206,14 +215,18 @@ public class ChessGameFrame extends JFrame {
             }
         });
     }
+
     public void addTheme1button(JLabel j) {
-        JButton button = new JButton("S1");
+        JButton button = new JButton("G");
         button.setLocation(HEIGHT, HEIGHT / 10 + 60);
         button.setSize(60, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         j.add(button);
 
         button.addActionListener(e -> {
+            is1 = true;
+            is2 = false;
+            is3 = false;
             ImageIcon imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/flower.jpg");
             Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
             imageIcon.setImage(scaledImage);
@@ -224,14 +237,17 @@ public class ChessGameFrame extends JFrame {
     }
 
     public void addTheme2button(JLabel j) {
-        JButton button = new JButton("S2");
+        JButton button = new JButton("B");
         button.setLocation(HEIGHT + 60, HEIGHT / 10 + 60);
         button.setSize(60, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
         j.add(button);
 
         button.addActionListener(e -> {
-            ImageIcon imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/cover.jpg");
+            is1 = false;
+            is2 = true;
+            is3 = false;
+            ImageIcon imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/blue.png");
             Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
             imageIcon.setImage(scaledImage);
             j.setIcon(imageIcon);
@@ -241,7 +257,7 @@ public class ChessGameFrame extends JFrame {
     }
 
     public void addTheme3button(JLabel j) {
-        JButton button = new JButton("S3");
+        JButton button = new JButton("P");
         button.setLocation(HEIGHT + 120, HEIGHT / 10 + 60);
         //button.setLocation(this.WIDTH-HEIGHT-228, HEIGHT / 10 + 60);
         button.setSize(60, 60);
@@ -249,7 +265,10 @@ public class ChessGameFrame extends JFrame {
         j.add(button);
 
         button.addActionListener(e -> {
-            ImageIcon imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/purple.png");
+            is1 = false;
+            is2 = false;
+            is3 = true;
+            ImageIcon imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/colorful.png");
             Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
             imageIcon.setImage(scaledImage);
             j.setIcon(imageIcon);
@@ -259,71 +278,30 @@ public class ChessGameFrame extends JFrame {
 
 
     }
-    public static void playMusic() {// 背景音乐播放
+    public static class musicStuff {
+        public void playMusic(String musicLocation)
+        {
+            try
+            {
+                File musicPath = new File(musicLocation);
 
-        try {
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new File("./ChessDemo/ChessDemo/music/Summer.wav"));
-            AudioFormat aif = ais.getFormat();
-            final SourceDataLine sdl;
-            DataLine.Info info = new DataLine.Info(SourceDataLine.class, aif);
-            sdl = (SourceDataLine) AudioSystem.getLine(info);
-            sdl.open(aif);
-            sdl.start();
-            FloatControl fc = (FloatControl) sdl.getControl(FloatControl.Type.MASTER_GAIN);
-            // value可以用来设置音量，从0-2.0
-            double value = 2;
-            float dB = (float) (Math.log(value == 0.0 ? 0.0001 : value) / Math.log(10.0) * 20.0);
-            fc.setValue(dB);
-            int nByte = 0;
-            int writeByte = 0;
-            final int SIZE = 1024 * 64;
-            byte[] buffer = new byte[SIZE];
-            while (nByte != -1) {// 判断 播放/暂停 状态
-
-                if(flag) {
-
-                    nByte = ais.read(buffer, 0, SIZE);
-
-                    sdl.write(buffer, 0, nByte);
-
-                }else {
-
-                    nByte = ais.read(buffer, 0, 0);
+                if(musicPath.exists())
+                {
+                    AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(audioInput);
+                    clip.start();
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
+                }
+                else
+                {
 
                 }
-
             }
-            sdl.stop();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
     }
-//    public static void playMusic() {// 背景音乐播放
-//        try {
-//            AudioInputStream ais = AudioSystem.getAudioInputStream(new File("./ChessDemo/ChessDemo/music/Summer.wav"));    //绝对路径
-//            AudioFormat aif = ais.getFormat();
-//            final SourceDataLine sdl;
-//            DataLine.Info info = new DataLine.Info(SourceDataLine.class, aif);
-//            sdl = (SourceDataLine) AudioSystem.getLine(info);
-//            sdl.open(aif);
-//            sdl.start();
-//            FloatControl fc = (FloatControl) sdl.getControl(FloatControl.Type.MASTER_GAIN);
-//            // value可以用来设置音量，从0-2.0
-//            double value = 2;
-//            float dB = (float) (Math.log(value == 0.0 ? 0.0001 : value) / Math.log(10.0) * 20.0);
-//            fc.setValue(dB);
-//            int nByte = 0;
-//            final int SIZE = 1024 * 64;
-//            byte[] buffer = new byte[SIZE];
-//            while (nByte != -1) {
-//                nByte = ais.read(buffer, 0, SIZE);
-//              sdl.write(buffer, 0, nByte);
-//            }
-//            sdl.stop();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
