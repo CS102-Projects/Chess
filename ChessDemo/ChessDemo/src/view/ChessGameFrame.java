@@ -84,7 +84,7 @@ public class ChessGameFrame extends JFrame {
         JPanel moveRecord = new JPanel();
         moveRecord.setLocation(HEIGHT + 200, HEIGHT / 10);
         moveRecord.setBackground(null);//似乎并没有什么卵用
-        moveRecord.setSize(200, 300);
+        moveRecord.setSize(200, 390);
         moveRecord.setFont(new Font("Rockwell", Font.BOLD, 20));
         record.setEditable(false);
         record.setLineWrap(true);    //设置文本域中的文本为自动换行
@@ -97,8 +97,8 @@ public class ChessGameFrame extends JFrame {
         Dimension size = record.getPreferredSize();    //获得文本域的首选大小
         jsp.setBounds(HEIGHT + 300, HEIGHT / 10, size.width, size.height);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        DefaultCaret caret = (DefaultCaret) record.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        DefaultCaret caret = (DefaultCaret) record.getCaret();//似乎并没有什么卵用
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);//似乎并没有什么卵用
         moveRecord.add(jsp);//将JScrollPane添加到JPanel容器中
         j.add(moveRecord);
     }

@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 public class MenuFrame extends JFrame implements ActionListener {
 
@@ -84,6 +82,7 @@ public class MenuFrame extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             ChessGameFrame mainFrame = new ChessGameFrame(1300, 760);
             mainFrame.setVisible(true);
+            Main.myFrame.setVisible(false);
             new Thread(() -> {
                 while (true) {
                     ChessGameFrame.playMusic();

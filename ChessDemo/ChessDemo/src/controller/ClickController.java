@@ -104,6 +104,7 @@ public class ClickController {
 
                 UndoManagerController.getInstance().clear();
                 chessboard.reset();
+
             }
         }
 
@@ -182,7 +183,8 @@ public class ClickController {
             groupUndoController.addUndoController(switchUndoController);
             groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
-            ChessGameFrame.record.append("\n"+ groupUndoController);
+            ChessGameFrame.record.append("\n" + groupUndoController);
+            ChessGameFrame.record.setCaretPosition(ChessGameFrame.record.getText().length());
         } else if (actionType == ActionType.UPGRADE_PAWN) {
             if (switchType == 0) {
                 switchChessDlg.setVisible(true);
@@ -200,6 +202,7 @@ public class ClickController {
             groupUndoController.addUndoController(switchUndoController);
             undoManagerController.add(groupUndoController);
             ChessGameFrame.record.append("\n" + groupUndoController);
+            ChessGameFrame.record.setCaretPosition(ChessGameFrame.record.getText().length());
         } else if (actionType == ActionType.EXCHANGE_KING_AND_ROOK) {
             GroupUndoController groupUndoController = new GroupUndoController();
             int secondY = chessComponent.getChessboardPoint().getY();
@@ -222,11 +225,12 @@ public class ClickController {
             groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
             ChessGameFrame.record.append("\n" + groupUndoController);
-
+            ChessGameFrame.record.setCaretPosition(ChessGameFrame.record.getText().length());
         } else {
             MoveUndoController move = new MoveUndoController(firstChess, chessComponent, chessboard);
             undoManagerController.add(move);
             ChessGameFrame.record.append("\n" + move);
+            ChessGameFrame.record.setCaretPosition(ChessGameFrame.record.getText().length());
         }
     }
 }
