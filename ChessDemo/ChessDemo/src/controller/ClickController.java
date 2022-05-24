@@ -79,7 +79,9 @@ public class ClickController {
             ChessComponent enemyKing = chessboard.getKing(enemyColor);
             enemyKing.setShowType(3); // 被攻击
             System.out.println("--attack king--");
-
+            if (enemyColor == ChessColor.BLACK)
+                ChessGameFrame.record.append("\n" + "WHITE CHECK" + StatusController.blackHikedCount);
+            else ChessGameFrame.record.append("\n" + "BLACK CHECK" + StatusController.whiteHikedCount);
             if (chessboard.getStatusController().isDead(enemyColor, chessboard)) {
                 System.out.println(chess1.getChessColor().toString() + " is win");
                 int res = JOptionPane.showConfirmDialog(null, chess1.getChessColor().toString() + " is win \n 是否重新开始", "WIN", JOptionPane.YES_NO_OPTION);
@@ -87,28 +89,28 @@ public class ClickController {
 
                     UndoManagerController.getInstance().clear();
                     chessboard.reset();
+                    ChessGameFrame.record.setText("MoveRecord");
+
                 }
             } else if (chessboard.getStatusController().isContinueHikingDraw(enemyColor, chessboard)) {
-                System.out.println("Draw");
-                int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-
-                    UndoManagerController.getInstance().clear();
-                    chessboard.reset();
-                }
+                drawJudge();
             }
         } else if (chessboard.getStatusController().isCanNotMoveDraw(enemyColor, chessboard)) {
-            System.out.println("Draw");
-            int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
-            if (res == JOptionPane.YES_OPTION) {
-
-                UndoManagerController.getInstance().clear();
-                chessboard.reset();
-
-            }
+            drawJudge();
         }
 
 
+    }
+
+    private void drawJudge() {
+        System.out.println("Draw");
+        int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+
+            UndoManagerController.getInstance().clear();
+            chessboard.reset();
+            ChessGameFrame.record.setText("MoveRecord");
+        }
     }
 
     public void moveChessByFile(ChessboardPoint from, ChessboardPoint to, int switchType) {

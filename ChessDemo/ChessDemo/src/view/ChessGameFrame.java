@@ -82,8 +82,9 @@ public class ChessGameFrame extends JFrame {
 
     private void addMoveRecordPanel(JLabel j) {
         JPanel moveRecord = new JPanel();
-        moveRecord.setLocation(HEIGHT + 200, HEIGHT / 10);
-        moveRecord.setBackground(null);//似乎并没有什么卵用
+        moveRecord.setLocation(HEIGHT + 220, HEIGHT / 10);
+        moveRecord.setBorder(null);
+        moveRecord.setOpaque(false);//设置背景透明
         moveRecord.setSize(200, 390);
         moveRecord.setFont(new Font("Rockwell", Font.BOLD, 20));
         record.setEditable(false);
