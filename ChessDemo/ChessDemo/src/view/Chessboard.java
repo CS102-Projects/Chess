@@ -81,6 +81,7 @@ public class Chessboard extends JComponent {
         }
 
         currentColor = ChessColor.WHITE;
+        ChessGameFrame.currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
         clickController.clear();
     }
 

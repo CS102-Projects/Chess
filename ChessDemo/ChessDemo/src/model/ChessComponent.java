@@ -213,21 +213,30 @@ public abstract class ChessComponent extends JComponent {
 //        String ss = "("+getChessboardPoint().getX() + ","+getChessboardPoint().getY()+") ";
 //        g.drawString(ss, 20, 20);
         //显示坐标
-
-
-        if (isEnablePath) {
-            g.fillRect(8, 8, 20, 5);
-            g.fillRect(8, 8, 5, 20);
-
-            g.fillRect(getWidth() - 8 - 20, 8, 20, 5);
-            g.fillRect(getWidth() - 8 - 5, 8, 5, 20);
-
-            g.fillRect(8, getHeight() - 8 - 5, 20, 5);
-            g.fillRect(8, getHeight() - 8 - 20, 5, 20);
-
-            g.fillRect(getWidth() - 8 - 20, getHeight() - 8 - 5, 20, 5);
-            g.fillRect(getWidth() - 8 - 5, getHeight() - 8 - 20, 5, 20);
+        if (showType == 1) {
+            g.setColor(Color.green);
+            drawPathType(g);
+        } else if (showType == 2) {
+            g.setColor(Color.gray);
+            drawPathType(g);
+        } else if (showType == 3) {
+            g.setColor(Color.red);
+            drawPathType(g);
         }
+
+    }
+    private void drawPathType(Graphics g) {
+        g.fillRect(8, 8, 20, 5);
+        g.fillRect(8, 8, 5, 20);
+
+        g.fillRect(getWidth() - 8 - 20, 8, 20, 5);
+        g.fillRect(getWidth() - 8 - 5, 8, 5, 20);
+
+        g.fillRect(8, getHeight() - 8 - 5, 20, 5);
+        g.fillRect(8, getHeight() - 8 - 20, 5, 20);
+
+        g.fillRect(getWidth() - 8 - 20, getHeight() - 8 - 5, 20, 5);
+        g.fillRect(getWidth() - 8 - 5, getHeight() - 8 - 20, 5, 20);
     }
 
 }

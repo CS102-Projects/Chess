@@ -73,6 +73,8 @@ public class ClickController {
 
     private void move(ChessComponent chess1) {
         ChessColor enemyColor = chess1.getChessColor().getColor() == Color.BLACK ? ChessColor.WHITE : ChessColor.BLACK;
+        chessboard.swapColor();
+        ChessGameFrame.currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
         if (chessboard.getStatusController().isHitKing(chess1.getChessColor(), chessboard)) {
             ChessComponent enemyKing = chessboard.getKing(enemyColor);
             enemyKing.setShowType(3); // 被攻击
@@ -103,8 +105,7 @@ public class ClickController {
             }
         }
 
-        chessboard.swapColor();
-        ChessGameFrame.currentPlayerLabel.setText(String.valueOf(Chessboard.currentColor));
+
     }
 
     public void moveChessByFile(ChessboardPoint from, ChessboardPoint to, int switchType) {

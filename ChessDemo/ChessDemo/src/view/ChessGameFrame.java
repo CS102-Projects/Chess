@@ -21,6 +21,7 @@ public class ChessGameFrame extends JFrame {
     public static JLabel currentPlayerLabel = new JLabel();
     public static JTextArea record = new JTextArea("MoveRecord", 20, 20);
     private static JLabel background;
+    private static boolean flag = true;
 
     public ChessGameFrame(int width, int height) {
 
@@ -258,10 +259,10 @@ public class ChessGameFrame extends JFrame {
 
 
     }
-
     public static void playMusic() {// 背景音乐播放
+
         try {
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new File("./ChessDemo/ChessDemo/music/Summer.wav"));    //绝对路径
+            AudioInputStream ais = AudioSystem.getAudioInputStream(new File("./ChessDemo/ChessDemo/music/Summer.wav"));
             AudioFormat aif = ais.getFormat();
             final SourceDataLine sdl;
             DataLine.Info info = new DataLine.Info(SourceDataLine.class, aif);
@@ -274,11 +275,23 @@ public class ChessGameFrame extends JFrame {
             float dB = (float) (Math.log(value == 0.0 ? 0.0001 : value) / Math.log(10.0) * 20.0);
             fc.setValue(dB);
             int nByte = 0;
+            int writeByte = 0;
             final int SIZE = 1024 * 64;
             byte[] buffer = new byte[SIZE];
-            while (nByte != -1) {
-                nByte = ais.read(buffer, 0, SIZE);
-              sdl.write(buffer, 0, nByte);
+            while (nByte != -1) {// 判断 播放/暂停 状态
+
+                if(flag) {
+
+                    nByte = ais.read(buffer, 0, SIZE);
+
+                    sdl.write(buffer, 0, nByte);
+
+                }else {
+
+                    nByte = ais.read(buffer, 0, 0);
+
+                }
+
             }
             sdl.stop();
 
@@ -286,4 +299,31 @@ public class ChessGameFrame extends JFrame {
             e.printStackTrace();
         }
     }
+//    public static void playMusic() {// 背景音乐播放
+//        try {
+//            AudioInputStream ais = AudioSystem.getAudioInputStream(new File("./ChessDemo/ChessDemo/music/Summer.wav"));    //绝对路径
+//            AudioFormat aif = ais.getFormat();
+//            final SourceDataLine sdl;
+//            DataLine.Info info = new DataLine.Info(SourceDataLine.class, aif);
+//            sdl = (SourceDataLine) AudioSystem.getLine(info);
+//            sdl.open(aif);
+//            sdl.start();
+//            FloatControl fc = (FloatControl) sdl.getControl(FloatControl.Type.MASTER_GAIN);
+//            // value可以用来设置音量，从0-2.0
+//            double value = 2;
+//            float dB = (float) (Math.log(value == 0.0 ? 0.0001 : value) / Math.log(10.0) * 20.0);
+//            fc.setValue(dB);
+//            int nByte = 0;
+//            final int SIZE = 1024 * 64;
+//            byte[] buffer = new byte[SIZE];
+//            while (nByte != -1) {
+//                nByte = ais.read(buffer, 0, SIZE);
+//              sdl.write(buffer, 0, nByte);
+//            }
+//            sdl.stop();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
