@@ -84,24 +84,26 @@ public class ClickController {
                 System.out.println(chess1.getChessColor().toString() + " is win");
                 int res = JOptionPane.showConfirmDialog(null, chess1.getChessColor().toString() + " is win \n 是否重新开始", "WIN", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
-                    chessboard.reset();
+
                     UndoManagerController.getInstance().clear();
+                    chessboard.reset();
                 }
             } else if (chessboard.getStatusController().isContinueHikingDraw(enemyColor, chessboard)) {
                 System.out.println("Draw");
                 int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
-                    chessboard.reset();
+
                     UndoManagerController.getInstance().clear();
+                    chessboard.reset();
                 }
             }
-        }
-        if (chessboard.getStatusController().isCanNotMoveDraw(enemyColor, chessboard)) {
+        } else if (chessboard.getStatusController().isCanNotMoveDraw(enemyColor, chessboard)) {
             System.out.println("Draw");
             int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
             if (res == JOptionPane.YES_OPTION) {
-                chessboard.reset();
+
                 UndoManagerController.getInstance().clear();
+                chessboard.reset();
             }
         }
 

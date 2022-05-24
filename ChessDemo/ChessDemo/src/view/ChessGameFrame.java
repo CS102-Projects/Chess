@@ -82,14 +82,15 @@ public class ChessGameFrame extends JFrame {
 
     private void addMoveRecordPanel(JLabel j) {
         JPanel moveRecord = new JPanel();
-        moveRecord.setLocation(HEIGHT + 100, HEIGHT / 10);
-        moveRecord.setSize(500, 600);
+        moveRecord.setLocation(HEIGHT + 200, HEIGHT / 10);
+        moveRecord.setBackground(null);//似乎并没有什么卵用
+        moveRecord.setSize(200, 300);
         moveRecord.setFont(new Font("Rockwell", Font.BOLD, 20));
         record.setEditable(false);
         record.setLineWrap(true);    //设置文本域中的文本为自动换行
-        record.setForeground(Color.BLACK);    //设置组件的背景色
+        record.setForeground(Color.BLACK);    //设置字体颜色
         record.setFont(new Font("楷体", Font.BOLD, 16));    //修改字体样式
-        record.setBackground(Color.WHITE);//设置按钮背景色
+        record.setBackground(Color.WHITE);//设置文本域背景色
 //        record.setLocation(HEIGHT+600,HEIGHT/10);
         record.setSize(300, 300);
         JScrollPane jsp = new JScrollPane(record);    //将文本域放入滚动窗口
