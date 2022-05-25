@@ -1,6 +1,5 @@
 package controller;
 
-import model.ChessComponent;
 import view.Chessboard;
 
 

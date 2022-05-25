@@ -1,7 +1,6 @@
 package controller;
 
 
-import model.ChessComponent;
 import view.Chessboard;
 
 public class ClickController {

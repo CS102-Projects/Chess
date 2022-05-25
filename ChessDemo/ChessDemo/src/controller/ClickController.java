@@ -79,33 +79,38 @@ public class ClickController {
             ChessComponent enemyKing = chessboard.getKing(enemyColor);
             enemyKing.setShowType(3); // 被攻击
             System.out.println("--attack king--");
-
+            if (enemyColor == ChessColor.BLACK)
+                ChessGameFrame.record.append("\n" + "WHITE CHECK" + StatusController.blackHikedCount);
+            else ChessGameFrame.record.append("\n" + "BLACK CHECK" + StatusController.whiteHikedCount);
             if (chessboard.getStatusController().isDead(enemyColor, chessboard)) {
                 System.out.println(chess1.getChessColor().toString() + " is win");
                 int res = JOptionPane.showConfirmDialog(null, chess1.getChessColor().toString() + " is win \n 是否重新开始", "WIN", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
-                    chessboard.reset();
+
                     UndoManagerController.getInstance().clear();
+                    chessboard.reset();
+                    ChessGameFrame.record.setText("MoveRecord");
+
                 }
             } else if (chessboard.getStatusController().isContinueHikingDraw(enemyColor, chessboard)) {
-                System.out.println("Draw");
-                int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                    chessboard.reset();
-                    UndoManagerController.getInstance().clear();
-                }
+                drawJudge();
             }
-        }
-        if (chessboard.getStatusController().isCanNotMoveDraw(enemyColor, chessboard)) {
-            System.out.println("Draw");
-            int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
-            if (res == JOptionPane.YES_OPTION) {
-                chessboard.reset();
-                UndoManagerController.getInstance().clear();
-            }
+        } else if (chessboard.getStatusController().isCanNotMoveDraw(enemyColor, chessboard)) {
+            drawJudge();
         }
 
 
+    }
+
+    private void drawJudge() {
+        System.out.println("Draw");
+        int res = JOptionPane.showConfirmDialog(null, " is Draw \n 是否重新开始", "DRAW", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+
+            UndoManagerController.getInstance().clear();
+            chessboard.reset();
+            ChessGameFrame.record.setText("MoveRecord");
+        }
     }
 
     public void moveChessByFile(ChessboardPoint from, ChessboardPoint to, int switchType) {
@@ -180,7 +185,8 @@ public class ClickController {
             groupUndoController.addUndoController(switchUndoController);
             groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
-            ChessGameFrame.record.append("\n"+ groupUndoController);
+            ChessGameFrame.record.append("\n" + groupUndoController);
+            ChessGameFrame.record.setCaretPosition(ChessGameFrame.record.getText().length());
         } else if (actionType == ActionType.UPGRADE_PAWN) {
             if (switchType == 0) {
                 switchChessDlg.setVisible(true);
@@ -198,6 +204,7 @@ public class ClickController {
             groupUndoController.addUndoController(switchUndoController);
             undoManagerController.add(groupUndoController);
             ChessGameFrame.record.append("\n" + groupUndoController);
+            ChessGameFrame.record.setCaretPosition(ChessGameFrame.record.getText().length());
         } else if (actionType == ActionType.EXCHANGE_KING_AND_ROOK) {
             GroupUndoController groupUndoController = new GroupUndoController();
             int secondY = chessComponent.getChessboardPoint().getY();
@@ -220,11 +227,12 @@ public class ClickController {
             groupUndoController.addUndoController(new MoveUndoController(firstChess, chessComponent, chessboard));
             undoManagerController.add(groupUndoController);
             ChessGameFrame.record.append("\n" + groupUndoController);
-
+            ChessGameFrame.record.setCaretPosition(ChessGameFrame.record.getText().length());
         } else {
             MoveUndoController move = new MoveUndoController(firstChess, chessComponent, chessboard);
             undoManagerController.add(move);
             ChessGameFrame.record.append("\n" + move);
+            ChessGameFrame.record.setCaretPosition(ChessGameFrame.record.getText().length());
         }
     }
 }

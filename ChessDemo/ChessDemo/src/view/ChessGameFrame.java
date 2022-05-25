@@ -87,22 +87,24 @@ public class ChessGameFrame extends JFrame {
 
     private void addMoveRecordPanel(JLabel j) {
         JPanel moveRecord = new JPanel();
-        moveRecord.setLocation(HEIGHT + 100, HEIGHT / 10);
-        moveRecord.setSize(500, 600);
+        moveRecord.setLocation(HEIGHT + 220, HEIGHT / 10);
+        moveRecord.setBorder(null);
+        moveRecord.setOpaque(false);//设置背景透明
+        moveRecord.setSize(200, 390);
         moveRecord.setFont(new Font("Rockwell", Font.BOLD, 20));
         record.setEditable(false);
         record.setLineWrap(true);    //设置文本域中的文本为自动换行
-        record.setForeground(Color.BLACK);    //设置组件的背景色
+        record.setForeground(Color.BLACK);    //设置字体颜色
         record.setFont(new Font("楷体", Font.BOLD, 16));    //修改字体样式
-        record.setBackground(Color.WHITE);//设置按钮背景色
+        record.setBackground(Color.WHITE);//设置文本域背景色
 //        record.setLocation(HEIGHT+600,HEIGHT/10);
         record.setSize(300, 300);
         JScrollPane jsp = new JScrollPane(record);    //将文本域放入滚动窗口
         Dimension size = record.getPreferredSize();    //获得文本域的首选大小
         jsp.setBounds(HEIGHT + 300, HEIGHT / 10, size.width, size.height);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        DefaultCaret caret = (DefaultCaret) record.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        DefaultCaret caret = (DefaultCaret) record.getCaret();//似乎并没有什么卵用
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);//似乎并没有什么卵用
         moveRecord.add(jsp);//将JScrollPane添加到JPanel容器中
 
         moveRecord.setBorder(null);
