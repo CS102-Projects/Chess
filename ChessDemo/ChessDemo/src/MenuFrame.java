@@ -36,7 +36,10 @@ public class MenuFrame extends JFrame implements ActionListener {
         this.setBounds(400, 200, 700, 500);
         this.setVisible(true);
 
-        StartButton = new JButton();
+        StartButton = new JButton("Game Start");
+        Font f =new Font("Rockwell", Font.BOLD, 20);
+        StartButton.setFont(f);
+
         StartButton.setBounds(216, 280, 200, 50);
         StartButton.setOpaque(false);
         StartButton.setFocusPainted(false);
@@ -44,7 +47,6 @@ public class MenuFrame extends JFrame implements ActionListener {
         // StartButton.setBorder(null);
         StartButton.setLayout(null);
         //StartButton.setMargin(new Insets(0, 0, 0, 0));
-        StartButton.setText("Game Start");
         panel.add(StartButton);
         StartButton.setVisible(true);
         StartButton.addActionListener(this);
@@ -54,7 +56,8 @@ public class MenuFrame extends JFrame implements ActionListener {
         background.setBounds(0, 0, this.getWidth(), this.getHeight());
         background.setLayout(null);
 
-        imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/coverSS.png");
+        imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/rainbow.gif");
+        //./ChessDemo/ChessDemo/images/coverSS.png
         Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
         imageIcon.setImage(scaledImage);
 

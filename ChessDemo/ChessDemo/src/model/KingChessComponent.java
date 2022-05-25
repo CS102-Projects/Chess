@@ -9,6 +9,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
+
 /**
  * 这个类表示国际象棋里面的车
  */
@@ -59,12 +60,12 @@ public class KingChessComponent extends ChessComponent {
      * 读取加载车棋子的图片
      */
     public void loadResource() throws IOException {
-        if (KING_WHITE == null) {
-            KING_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/4.png"));
-        }
-        if (KING_BLACK == null) {
-            KING_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/7.png"));
-        }
+            if (KING_WHITE == null) {
+                KING_WHITE = ImageIO.read(new File("./ChessDemo/ChessDemo/images/4.png"));
+            }
+            if (KING_BLACK == null) {
+                KING_BLACK = ImageIO.read(new File("./ChessDemo/ChessDemo/images/7.png"));
+            }
     }
 
     @Override

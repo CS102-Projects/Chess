@@ -1,6 +1,7 @@
 package model;
 
 import controller.ClickController;
+import view.ChessGameFrame;
 import view.ChessboardPoint;
 
 import javax.swing.*;
