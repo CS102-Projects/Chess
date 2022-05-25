@@ -5,6 +5,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 
 public class MenuFrame extends JFrame implements ActionListener {
 
@@ -18,6 +23,7 @@ public class MenuFrame extends JFrame implements ActionListener {
     private static JLabel background;
     private static ImageIcon imageIcon;
     private static JButton loadButton;
+    private static boolean programmatic = false;
 
     public MenuFrame() {
         x = 20;
@@ -53,8 +59,7 @@ public class MenuFrame extends JFrame implements ActionListener {
         background.setBounds(0, 0, this.getWidth(), this.getHeight());
         background.setLayout(null);
 
-        imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/rainbow.gif");
-        //./ChessDemo/ChessDemo/images/coverSS.png
+        imageIcon = new ImageIcon("./ChessDemo/ChessDemo/images/yuan.gif");
         Image scaledImage = imageIcon.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
         imageIcon.setImage(scaledImage);
 
@@ -66,6 +71,7 @@ public class MenuFrame extends JFrame implements ActionListener {
 
 
     }
+
 
     private void addTitle(JLabel j) {
         JLabel title = new JLabel();
@@ -85,7 +91,6 @@ public class MenuFrame extends JFrame implements ActionListener {
             String filepath = "./ChessDemo/ChessDemo/music/Summer.wav";
             ChessGameFrame.musicStuff musicObject = new ChessGameFrame.musicStuff();
             musicObject.playMusic(filepath);
-
         });
     }
 

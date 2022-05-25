@@ -132,6 +132,8 @@ public class ChessGameFrame extends JFrame {
         button.setLocation(HEIGHT, HEIGHT / 10 + 120);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
         j.add(button);
     }
 
@@ -140,6 +142,8 @@ public class ChessGameFrame extends JFrame {
         button.setLocation(HEIGHT, HEIGHT / 10 + 180);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
         j.add(button);
 
         button.addActionListener(e -> {
@@ -161,6 +165,8 @@ public class ChessGameFrame extends JFrame {
         button.setLocation(HEIGHT, HEIGHT / 10 + 240);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
         j.add(button);
     }
 
@@ -169,6 +175,8 @@ public class ChessGameFrame extends JFrame {
         button.setLocation(HEIGHT, HEIGHT / 10 + 300);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
         j.add(button);
 
         button.addActionListener(e -> {
@@ -182,6 +190,8 @@ public class ChessGameFrame extends JFrame {
         button.setLocation(HEIGHT, HEIGHT / 10 + 420);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
         j.add(button);
 
         button.addActionListener(e -> {
@@ -202,6 +212,8 @@ public class ChessGameFrame extends JFrame {
         button.setLocation(HEIGHT, HEIGHT / 10 + 480);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
         j.add(button);
 
         button.addActionListener(e -> {
@@ -223,6 +235,8 @@ public class ChessGameFrame extends JFrame {
         button.setLocation(HEIGHT, HEIGHT / 10 + 60);
         button.setSize(60, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
         j.add(button);
 
         button.addActionListener(e -> {
@@ -243,6 +257,8 @@ public class ChessGameFrame extends JFrame {
         button.setLocation(HEIGHT + 60, HEIGHT / 10 + 60);
         button.setSize(60, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
         j.add(button);
 
         button.addActionListener(e -> {
@@ -264,6 +280,8 @@ public class ChessGameFrame extends JFrame {
         //button.setLocation(this.WIDTH-HEIGHT-228, HEIGHT / 10 + 60);
         button.setSize(60, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
         j.add(button);
 
         button.addActionListener(e -> {
