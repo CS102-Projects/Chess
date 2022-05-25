@@ -2,11 +2,12 @@ package view;
 
 import controller.GameController;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -30,7 +31,7 @@ public class ChessGameFrame extends JFrame {
 
     public ChessGameFrame(int width, int height) {
 
-        setTitle("2022 CS102A Project Demo"); //设置标题
+        setTitle("2022 CS120A Project"); //设置标题
         this.WIDTH = width;
         this.HEIGHT = height;
         this.CHESSBOARD_SIZE = HEIGHT * 4 / 5;
@@ -96,7 +97,7 @@ public class ChessGameFrame extends JFrame {
         record.setLineWrap(true);    //设置文本域中的文本为自动换行
         record.setForeground(Color.BLACK);    //设置字体颜色
         record.setFont(new Font("楷体", Font.BOLD, 16));    //修改字体样式
-        record.setBackground(Color.WHITE);//设置文本域背景色
+        record.setBackground(new Color(244, 242, 213));//设置文本域背景色
 //        record.setLocation(HEIGHT+600,HEIGHT/10);
         record.setSize(300, 300);
         JScrollPane jsp = new JScrollPane(record);    //将文本域放入滚动窗口
