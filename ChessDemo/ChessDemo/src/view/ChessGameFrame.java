@@ -209,7 +209,7 @@ public class ChessGameFrame extends JFrame {
     }
 
     private void addStoreButton(JLabel j) {
-        JButton button = new JButton("Store");
+        JButton button = new JButton("Save");
         button.setLocation(HEIGHT, HEIGHT / 10 + 480);
         button.setSize(200, 60);
         button.setFont(new Font("Rockwell", Font.BOLD, 20));

@@ -60,6 +60,8 @@ public class StoreController {
         line = in.readLine();
         while (line != null) {
             if (!parseLine(line.trim())) {
+                Frame loadWrongFrame = new LoadWrong(105);
+                loadWrongFrame.setVisible(true);
                 return false;
             }
             line = in.readLine();
@@ -120,8 +122,9 @@ public class StoreController {
         int col1 = Integer.parseInt(pos1[1]);
         int row2 = Integer.parseInt(pos2[0]);
         int col2 = Integer.parseInt(pos2[1]);
-
-        chessboard.moveChess(new ChessboardPoint(row1, col1), new ChessboardPoint(row2, col2), 0);
+        if (chessboard.getChessComponent(row1, col1).canMoveTo(chessboard.getChessComponents(), new ChessboardPoint(row2, col2))) {
+            chessboard.moveChess(new ChessboardPoint(row1, col1), new ChessboardPoint(row2, col2), 0);
+        } else return false;
 
 //        UndoManagerController.getInstance().add(
 //                new MoveUndoController(chessboard.getChessComponent(row1, col1),
@@ -181,6 +184,8 @@ public class StoreController {
                 jLabel.setText("   WRONG" + wrongType + ":CurrentPlayer Wrong");
             if (wrongType == 104)
                 jLabel.setText("   WRONG" + wrongType + ":FileType Wrong");
+            if (wrongType == 105)
+                jLabel.setText("   WRONG" + wrongType + ":Move not valid");
             jLabel.setFont(new Font("Rockwell", Font.BOLD, 20));
             Container container = getContentPane();
             container.add(jLabel);

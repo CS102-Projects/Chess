@@ -1,9 +1,12 @@
 <component name="ArtifactManager">
-  <artifact name="Chess:jar">
+  <artifact type="jar" name="Chess:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Chess_jar</output-path>
-    <root id="root">
-      <element id="archive" name="Chess.jar">
-        <element id="module-output" name="Chess" />
+    <properties id="ant-preprocessing">
+      <options enabled="true" />
+    </properties>
+    <root id="archive" name="Chess.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/ChessDemo/ChessDemo/src/META-INF/MANIFEST.MF" />
       </element>
     </root>
   </artifact>
